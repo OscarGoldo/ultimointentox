@@ -33,6 +33,7 @@ const valores = [
 ];
 
 const galeria = [
+  { src: "/images/foto1.jpg", alt: "Dra. Hilda Díaz en consulta" },
   { src: "/images/foto5.jpg", alt: "Atención neonatal" },
   { src: "/images/foto6.jpg", alt: "Cuidado del recién nacido" },
   { src: "/images/foto7.jpg", alt: "Parto y nacimiento" },

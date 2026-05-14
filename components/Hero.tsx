@@ -78,7 +78,7 @@ export default function Hero() {
               />
               <div className="relative w-[300px] h-[420px] sm:w-[380px] sm:h-[520px] rounded-[2rem] overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/foto1.jpg"
+                  src="/images/foto-principal.png"
                   alt="Dra. Hilda Mary Díaz García - Ginecóloga Obstetra en Maturín"
                   fill
                   className="object-cover object-top"
