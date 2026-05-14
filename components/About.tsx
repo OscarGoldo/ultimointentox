@@ -197,20 +197,19 @@ export default function About() {
           <p className="text-center text-sm font-semibold text-[#f06292] uppercase tracking-widest mb-6">
             Galería
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {galeria.map(({ src, alt }) => (
               <div
                 key={src}
-                className="rounded-2xl overflow-hidden shadow-md bg-white cursor-zoom-in hover:shadow-lg transition-shadow"
+                className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md cursor-zoom-in hover:shadow-lg transition-shadow"
                 onClick={() => setLightbox({ src, alt })}
               >
                 <Image
                   src={src}
                   alt={alt}
-                  width={300}
-                  height={400}
-                  className="w-full h-auto"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
                 />
               </div>
             ))}
