@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -50,22 +50,13 @@ export default function Footer() {
             </p>
             <div className="flex gap-3 mt-5">
               <a
-                href="https://www.instagram.com/"
+                href="https://www.instagram.com/doc.hildadiaz/?hl=es"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram de la Dra. Hilda Díaz"
                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-[#f06292] hover:bg-gray-700 transition-colors"
               >
                 <Instagram size={17} aria-hidden="true" />
-              </a>
-              <a
-                href="https://www.facebook.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook de la Dra. Hilda Díaz"
-                className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-[#f06292] hover:bg-gray-700 transition-colors"
-              >
-                <Facebook size={17} aria-hidden="true" />
               </a>
             </div>
           </div>

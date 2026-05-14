@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Phone, Calendar, Award, Users } from "lucide-react";
+import { Phone } from "lucide-react";
 import { useCalBooking } from "@/components/CalBookingModal";
-
-const stats = [
-  { icon: Award, label: "Años de Experiencia", value: "20+" },
-  { icon: Users, label: "Pacientes Atendidas", value: "5000+" },
-  { icon: Calendar, label: "Consultas al Año", value: "800+" },
-];
 
 export default function Hero() {
   const { openModal } = useCalBooking();
@@ -43,24 +37,24 @@ export default function Hero() {
               id="hero-heading"
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4"
             >
-              Tu salud{" "}
-              <span className="text-[#f06292]">ginecológica</span>{" "}
-              en las mejores manos
+              Ginecóloga, Obstetra y{" "}
+              <span className="text-[#f06292]">Especialista en Fertilidad</span>{" "}
+              en Maturín
             </h1>
 
             <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg">
-              La <strong>Dra. Hilda Mary Díaz García</strong>, especialista en Ginecología, Obstetricia y Fertilidad,
-              te acompaña en cada etapa de tu vida con atención personalizada, cálida y de alto nivel científico.
+              Más de 20 años acompañando mujeres en <strong>Maturín, Monagas</strong> y el oriente venezolano.
+              Atención en fertilidad, obstetricia y ginecología general en Clínica Tierra Santa.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={openModal}
-                aria-label="Agendar cita con la Dra. Hilda Díaz"
+                aria-label="Ver disponibilidad de citas con la Dra. Hilda Díaz"
                 className="inline-flex items-center justify-center gap-2 bg-[#f06292] text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] hover:shadow-rose-300 transition-all duration-200 group"
               >
                 <Phone size={18} aria-hidden="true" className="group-hover:scale-110 transition-transform" />
-                Agendar mi Cita
+                Ver disponibilidad
               </button>
               <a
                 href="#servicios"
@@ -73,23 +67,11 @@ export default function Hero() {
                 Ver Servicios
               </a>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              {stats.map(({ icon: Icon, label, value }) => (
-                <div key={label} className="text-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
-                  <Icon size={20} className="text-[#f06292] mx-auto mb-1" aria-hidden="true" />
-                  <p className="text-2xl font-bold text-gray-900">{value}</p>
-                  <p className="text-xs text-gray-500 leading-tight">{label}</p>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Imagen */}
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative">
-              {/* Círculo decorativo de fondo */}
               <div
                 className="absolute inset-0 scale-110 rounded-[2rem] bg-gradient-to-br from-rose-200 to-sky-200 rotate-3"
                 aria-hidden="true"

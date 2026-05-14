@@ -78,11 +78,20 @@ export default function Contact() {
     e.preventDefault();
     if (!validate()) return;
     setEnviando(true);
-    // Simula envío (aquí integrarías tu API o Formspree)
-    await new Promise((r) => setTimeout(r, 1500));
-    setEnviando(false);
-    setEnviado(true);
-    setForm({ nombre: "", telefono: "", email: "", motivo: "", mensaje: "" });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Error de servidor");
+      setEnviado(true);
+      setForm({ nombre: "", telefono: "", email: "", motivo: "", mensaje: "" });
+    } catch {
+      alert("Hubo un error al enviar. Por favor contáctanos directamente por WhatsApp.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   const handleChange = (
