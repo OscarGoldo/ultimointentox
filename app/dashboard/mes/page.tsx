@@ -35,7 +35,7 @@ export default async function MesPage({
   // Current month appointments
   const { data: currentAppts } = await supabase
     .from('appointments')
-    .select('*, patient:patients(id, name, is_first_visit:appointments(count))')
+    .select('*, patient:patients(id, name)')
     .gte('appointment_date', start)
     .lte('appointment_date', end)
 
