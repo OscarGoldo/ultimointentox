@@ -23,6 +23,12 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
+  const allowedEmails = (process.env.ALLOWED_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase())
+  if (!allowedEmails.includes(user.email?.toLowerCase() ?? '')) {
+    await supabase.auth.signOut()
+    redirect('/login?error=unauthorized')
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Desktop Sidebar */}

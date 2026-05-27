@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Heart } from 'lucide-react'
 
@@ -9,8 +10,15 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const searchParams = useSearchParams()
 
   const supabase = createClient()
+
+  useEffect(() => {
+    if (searchParams.get('error') === 'unauthorized') {
+      setError('Este correo no tiene acceso al panel.')
+    }
+  }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
