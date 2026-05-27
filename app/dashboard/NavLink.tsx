@@ -2,18 +2,27 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { type LucideIcon } from 'lucide-react'
+import { CalendarDays, BarChart2, Users, TrendingUp, Settings, type LucideIcon } from 'lucide-react'
+
+const ICONS: Record<string, LucideIcon> = {
+  CalendarDays,
+  BarChart2,
+  Users,
+  TrendingUp,
+  Settings,
+}
 
 interface Props {
   href: string
   label: string
-  icon: LucideIcon
+  iconName: string
   mobile?: boolean
 }
 
-export default function NavLink({ href, label, icon: Icon, mobile }: Props) {
+export default function NavLink({ href, label, iconName, mobile }: Props) {
   const pathname = usePathname()
   const isActive = pathname === href || pathname.startsWith(href + '/')
+  const Icon = ICONS[iconName] ?? CalendarDays
 
   if (mobile) {
     return (

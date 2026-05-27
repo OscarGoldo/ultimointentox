@@ -1,14 +1,14 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Heart, CalendarDays, BarChart2, Users, TrendingUp, Settings } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 import NavLink from './NavLink'
 
 const navItems = [
-  { href: '/dashboard/hoy', label: 'Hoy', icon: CalendarDays },
-  { href: '/dashboard/mes', label: 'Mes', icon: BarChart2 },
-  { href: '/dashboard/pacientes', label: 'Pacientes', icon: Users },
-  { href: '/dashboard/tendencias', label: 'Tendencias', icon: TrendingUp },
+  { href: '/dashboard/hoy', label: 'Hoy', iconName: 'CalendarDays' },
+  { href: '/dashboard/mes', label: 'Mes', iconName: 'BarChart2' },
+  { href: '/dashboard/pacientes', label: 'Pacientes', iconName: 'Users' },
+  { href: '/dashboard/tendencias', label: 'Tendencias', iconName: 'TrendingUp' },
 ]
 
 export default async function DashboardLayout({
@@ -42,13 +42,13 @@ export default async function DashboardLayout({
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-1">
-          {navItems.map(({ href, label, icon }) => (
-            <NavLink key={href} href={href} label={label} icon={icon} />
+          {navItems.map(({ href, label, iconName }) => (
+            <NavLink key={href} href={href} label={label} iconName={iconName} />
           ))}
           <NavLink
             href="/dashboard/configuracion/precios"
             label="Configuración"
-            icon={Settings}
+            iconName="Settings"
           />
         </nav>
 
@@ -68,8 +68,8 @@ export default async function DashboardLayout({
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 z-40">
         <div className="grid grid-cols-4 h-16">
-          {navItems.map(({ href, label, icon }) => (
-            <NavLink key={href} href={href} label={label} icon={icon} mobile />
+          {navItems.map(({ href, label, iconName }) => (
+            <NavLink key={href} href={href} label={label} iconName={iconName} mobile />
           ))}
         </div>
       </nav>
