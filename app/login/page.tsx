@@ -1,104 +1,33 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Heart } from 'lucide-react'
+import { Heart, Eye, EyeOff } from 'lucide-react'
 
-function LoginForm() {
+export default function LoginPage() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const searchParams = useSearchParams()
 
   const supabase = createClient()
-
-  useEffect(() => {
-    if (searchParams.get('error') === 'unauthorized') {
-      setError('Este correo no tiene acceso al panel.')
-    }
-  }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    const origin = window.location.origin
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('No se pudo enviar el enlace. Verifica tu correo e intenta de nuevo.')
+      setError('Correo o contraseña incorrectos.')
+      setLoading(false)
     } else {
-      setSent(true)
+      window.location.href = '/dashboard/hoy'
     }
-
-    setLoading(false)
   }
 
-  return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl">
-      {sent ? (
-        <div className="text-center py-4">
-          <div className="w-12 h-12 rounded-full bg-emerald-400/20 flex items-center justify-center mx-auto mb-4">
-            <span className="text-emerald-400 text-2xl">✓</span>
-          </div>
-          <h2 className="text-white font-semibold text-lg mb-2">Enlace enviado</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Revisa tu correo <span className="text-white font-medium">{email}</span> y haz clic
-            en el enlace de acceso.
-          </p>
-          <button
-            onClick={() => { setSent(false); setEmail('') }}
-            className="mt-5 text-[#f06292] text-sm hover:underline"
-          >
-            Usar otro correo
-          </button>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="tu@correo.com"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] focus:ring-1 focus:ring-[#f06292] transition-colors text-sm"
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading || !email}
-            className="w-full py-3 px-4 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:bg-[#f06292]/40 disabled:cursor-not-allowed text-white font-semibold transition-colors text-sm"
-          >
-            {loading ? 'Enviando...' : 'Enviar enlace de acceso'}
-          </button>
-        </form>
-      )}
-    </div>
-  )
-}
-
-export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4">
       <div className="w-full max-w-sm">
@@ -112,9 +41,62 @@ export default function LoginPage() {
           <p className="text-slate-400 text-sm mt-1">Panel interno — solo uso autorizado</p>
         </div>
 
-        <Suspense fallback={<div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 h-40" />}>
-          <LoginForm />
-        </Suspense>
+        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                Correo electrónico
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="tu@correo.com"
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] focus:ring-1 focus:ring-[#f06292] transition-colors text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+                Contraseña
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 pr-11 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] focus:ring-1 focus:ring-[#f06292] transition-colors text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <p className="text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="w-full py-3 px-4 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:bg-[#f06292]/40 disabled:cursor-not-allowed text-white font-semibold transition-colors text-sm"
+            >
+              {loading ? 'Entrando...' : 'Entrar al panel'}
+            </button>
+          </form>
+        </div>
 
         <p className="text-center text-slate-600 text-xs mt-6">
           Dra. Hilda Mary Díaz García · Ginecóloga
