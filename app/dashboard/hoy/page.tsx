@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { CalendarDays, CheckCircle, Clock, UserPlus, AlertTriangle } from 'lucide-react'
+import { CheckCircle, Clock, CalendarDays, UserPlus, AlertTriangle } from 'lucide-react'
 import { Appointment } from '@/lib/types'
 import { getGreeting, getTodayString } from '@/lib/utils'
-import AppointmentRow from './components/AppointmentRow'
+import AppointmentSection from './components/AppointmentSection'
 
 export const dynamic = 'force-dynamic'
 
@@ -73,26 +73,7 @@ export default async function HoyPage() {
       </div>
 
       {/* Appointment List */}
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden mb-6">
-        <div className="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
-          <h2 className="text-white font-semibold text-sm">Agenda de hoy</h2>
-          <span className="text-slate-400 text-xs">{total} citas</span>
-        </div>
-
-        {appts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4">
-            <CalendarDays size={40} className="text-slate-600 mb-3" />
-            <p className="text-slate-400 font-medium">Sin citas para hoy</p>
-            <p className="text-slate-600 text-sm mt-1">El día está libre</p>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-700">
-            {appts.map((appt) => (
-              <AppointmentRow key={appt.id} appointment={appt} />
-            ))}
-          </div>
-        )}
-      </div>
+      <AppointmentSection defaultDate={today} initialAppointments={appts} />
 
       {/* Pending Actions */}
       {(atRiskCount ?? 0) > 0 && (
