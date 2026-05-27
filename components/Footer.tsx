@@ -121,7 +121,16 @@ export default function Footer() {
           <p>
             © {currentYear} Dra. Hilda Mary Díaz García · RIF V-10353086-1
           </p>
-          <p>Maturín, Venezuela</p>
+          <div className="flex items-center gap-4">
+            <p>Maturín, Venezuela</p>
+            <a
+              href="/login"
+              className="text-gray-600 hover:text-gray-400 transition-colors"
+              aria-label="Panel interno"
+            >
+              Panel →
+            </a>
+          </div>
         </div>
       </div>
     </footer>
