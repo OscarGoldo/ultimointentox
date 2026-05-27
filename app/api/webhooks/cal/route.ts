@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 
 // Cal.com sends webhook events for booking events
 interface CalAttendee {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ received: true, skipped: true })
     }
 
-    const supabase = await createClient()
+    const supabase = createServiceClient()
 
     // Extract attendee info (first non-organizer attendee)
     const attendees = body.attendees || []

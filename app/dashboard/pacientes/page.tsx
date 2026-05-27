@@ -63,6 +63,10 @@ export default async function PacientesPage({
 
   if (filter === 'activas') {
     patientQuery = patientQuery.gte('last_visit_date', SIX_MONTHS_AGO.toISOString().split('T')[0])
+  } else if (filter === 'en-riesgo') {
+    patientQuery = patientQuery
+      .lt('last_visit_date', SIX_MONTHS_AGO.toISOString().split('T')[0])
+      .gte('last_visit_date', FOURTEEN_MONTHS_AGO.toISOString().split('T')[0])
   } else if (filter === 'inactivas') {
     patientQuery = patientQuery.lt('last_visit_date', FOURTEEN_MONTHS_AGO.toISOString().split('T')[0])
   }

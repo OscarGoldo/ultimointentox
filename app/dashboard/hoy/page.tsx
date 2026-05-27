@@ -103,7 +103,7 @@ export default async function HoyPage() {
               <p className="text-orange-400 font-semibold text-sm">Pacientes en riesgo</p>
               <p className="text-slate-400 text-xs mt-0.5">
                 {atRiskCount} paciente{atRiskCount !== 1 ? 's' : ''} sin visita en más de 6 meses.{' '}
-                <Link href="/dashboard/pacientes?filter=at_risk" className="text-orange-400 underline">
+                <Link href="/dashboard/pacientes?filter=en-riesgo" className="text-orange-400 underline">
                   Ver lista
                 </Link>
               </p>
