@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Heart } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 import NavLink from './NavLink'
+import MobileMoreMenu from './MobileMoreMenu'
 
 const navItems = [
   { href: '/dashboard/hoy', label: 'Hoy', iconName: 'CalendarDays' },
@@ -74,10 +75,11 @@ export default async function DashboardLayout({
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 z-40">
-        <div className="grid grid-cols-5 h-16">
+        <div className="grid grid-cols-6 h-16">
           {navItems.map(({ href, label, iconName }) => (
             <NavLink key={href} href={href} label={label} iconName={iconName} mobile />
           ))}
+          <MobileMoreMenu />
         </div>
       </nav>
     </div>
