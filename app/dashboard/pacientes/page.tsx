@@ -132,9 +132,14 @@ export default async function PacientesPage({
       {/* Pregnant patients alert */}
       {pregnant.length > 0 && filter !== 'embarazo' && !query && (
         <div className="bg-pink-400/10 border border-pink-400/30 rounded-2xl p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Baby size={16} className="text-pink-400" />
-            <h2 className="text-pink-400 font-semibold text-sm">Pacientes embarazadas</h2>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Baby size={16} className="text-pink-400" />
+              <h2 className="text-pink-400 font-semibold text-sm">Pacientes embarazadas</h2>
+            </div>
+            <Link href="/dashboard/embarazadas" className="text-pink-400 text-xs hover:underline font-medium">
+              Ver tablero →
+            </Link>
           </div>
           <div className="space-y-2">
             {pregnant.map((p) => {
