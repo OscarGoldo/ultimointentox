@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { Phone, Mail, MessageCircle, Calendar, TrendingUp, ArrowLeft } from 'lucide-react'
+import { Phone, Mail, MessageCircle, Calendar, TrendingUp, ArrowLeft, FileText } from 'lucide-react'
 import {
   formatDateShort,
   formatCurrency,
@@ -160,6 +160,32 @@ export default async function PatientDetailPage({
           <p className="text-white text-sm font-medium">
             {patient.last_visit_date ? formatDateShort(patient.last_visit_date) : '—'}
           </p>
+        </div>
+      </div>
+
+      {/* Documents */}
+      <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <FileText size={15} className="text-[#f06292]" />
+          <h2 className="text-white font-semibold text-sm">Generar documento</h2>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {[
+            { tipo: 'recipe', label: 'Récipe médico' },
+            { tipo: 'constancia', label: 'Constancia de consulta' },
+            { tipo: 'orden', label: 'Orden de estudios' },
+            { tipo: 'referencia', label: 'Referencia médica' },
+            { tipo: 'certificado', label: 'Certificado médico' },
+          ].map(({ tipo, label }) => (
+            <Link
+              key={tipo}
+              href={`/dashboard/documentos/${id}/${tipo}`}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 transition-colors text-xs font-medium"
+            >
+              <FileText size={13} className="text-[#f06292] flex-shrink-0" />
+              {label}
+            </Link>
+          ))}
         </div>
       </div>
 
