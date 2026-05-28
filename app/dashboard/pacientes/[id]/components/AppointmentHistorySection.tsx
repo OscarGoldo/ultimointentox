@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, FileText, Paperclip, Plus, Trash2, Save, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronDown, ChevronUp, FileText, Paperclip, Plus, Trash2, Save, Loader2, Pencil, X } from 'lucide-react'
 import { Appointment, Study } from '@/lib/types'
 import { formatDate, formatTime, formatCurrency, getStatusColor, getStatusLabel, getServiceLabel } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -61,6 +62,9 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
   const [studyForm, setStudyForm] = useState({ name: '', description: '' })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploadingStudy, setUploadingStudy] = useState(false)
+  const [editingStudy, setEditingStudy] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ name: '', description: '' })
+  const [savingEdit, setSavingEdit] = useState(false)
 
   async function toggleExpand(id: string) {
     if (expanded === id) { setExpanded(null); return }
@@ -135,6 +139,30 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
       toast.error(`Error: ${e instanceof Error ? e.message : 'desconocido'}`)
     } finally {
       setUploadingStudy(false)
+    }
+  }
+
+  async function submitEdit(apptId: string, studyId: string) {
+    if (!editForm.name.trim()) { toast.error('El nombre es requerido'); return }
+    setSavingEdit(true)
+    try {
+      const res = await fetch(`/api/studies/${studyId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editForm.name, description: editForm.description || null }),
+      })
+      if (!res.ok) throw new Error()
+      const updated = await res.json()
+      setAppts(prev => prev.map(a => a.id === apptId
+        ? { ...a, studies: (a.studies || []).map(s => s.id === studyId ? updated : s) }
+        : a
+      ))
+      setEditingStudy(null)
+      toast.success('Estudio actualizado')
+    } catch {
+      toast.error('Error al actualizar')
+    } finally {
+      setSavingEdit(false)
     }
   }
 
@@ -236,7 +264,7 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
                       </div>
                       {addingStudy !== appt.id && (
                         <button
-                          onClick={() => { setAddingStudy(appt.id); setStudyForm({ name: '', description: '' }); setSelectedFile(null) }}
+                          onClick={() => { setAddingStudy(appt.id); setStudyForm({ name: '', description: '' }); setSelectedFile(null); setEditingStudy(null) }}
                           className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:border-slate-600 text-xs transition-colors"
                         >
                           <Plus size={11} /> Agregar
@@ -249,21 +277,71 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
                     ) : (
                       <div className="space-y-2">
                         {(appt.studies || []).map(study => (
-                          <div key={study.id} className="flex items-start justify-between gap-2 bg-slate-900 rounded-xl p-3">
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white text-sm font-medium">{study.name}</p>
-                              {study.description && <p className="text-slate-400 text-xs mt-0.5">{study.description}</p>}
-                              {study.file_url && (
-                                <a href={study.file_url} target="_blank" rel="noopener noreferrer"
-                                  className="flex items-center gap-1 text-[#f06292] text-xs mt-1 hover:underline">
-                                  <Paperclip size={11} />{study.file_name || 'Ver archivo'}
-                                </a>
-                              )}
+                          editingStudy === study.id ? (
+                            /* Edit form */
+                            <div key={study.id} className="bg-slate-900 rounded-xl p-3 border border-[#f06292]/30 space-y-2">
+                              <input
+                                type="text"
+                                placeholder="Nombre del estudio *"
+                                value={editForm.name}
+                                onChange={(e) => setEditForm(f => ({ ...f, name: e.target.value }))}
+                                className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] text-sm"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Descripción (opcional)"
+                                value={editForm.description}
+                                onChange={(e) => setEditForm(f => ({ ...f, description: e.target.value }))}
+                                className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] text-sm"
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => submitEdit(appt.id, study.id)}
+                                  disabled={savingEdit}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f06292] text-white text-xs font-medium hover:bg-[#e91e8c] disabled:opacity-50 transition-colors"
+                                >
+                                  {savingEdit ? <Loader2 size={11} className="animate-spin" /> : <Save size={11} />}
+                                  Guardar
+                                </button>
+                                <button
+                                  onClick={() => setEditingStudy(null)}
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400 text-xs hover:text-white transition-colors"
+                                >
+                                  <X size={11} /> Cancelar
+                                </button>
+                              </div>
                             </div>
-                            <button onClick={() => deleteStudy(appt.id, study.id)} className="text-slate-600 hover:text-red-400 transition-colors">
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
+                          ) : (
+                            /* Normal view */
+                            <div key={study.id} className="flex items-start justify-between gap-2 bg-slate-900 rounded-xl p-3">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-white text-sm font-medium">{study.name}</p>
+                                {study.description && <p className="text-slate-400 text-xs mt-0.5">{study.description}</p>}
+                                {study.file_url && (
+                                  <a href={study.file_url} target="_blank" rel="noopener noreferrer"
+                                    className="flex items-center gap-1 text-[#f06292] text-xs mt-1 hover:underline">
+                                    <Paperclip size={11} />{study.file_name || 'Ver archivo'}
+                                  </a>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 flex-shrink-0">
+                                <button
+                                  onClick={() => { setEditingStudy(study.id); setEditForm({ name: study.name, description: study.description || '' }); setAddingStudy(null) }}
+                                  className="p-1 text-slate-600 hover:text-slate-300 transition-colors"
+                                  title="Editar"
+                                >
+                                  <Pencil size={13} />
+                                </button>
+                                <button
+                                  onClick={() => deleteStudy(appt.id, study.id)}
+                                  className="p-1 text-slate-600 hover:text-red-400 transition-colors"
+                                  title="Eliminar"
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              </div>
+                            </div>
+                          )
                         ))}
                         {(appt.studies || []).length === 0 && addingStudy !== appt.id && (
                           <p className="text-slate-600 text-xs">Sin estudios</p>
@@ -317,6 +395,19 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
                       </div>
                     )}
                   </div>
+
+                  {/* Generate consultation PDF */}
+                  {appt.studiesLoaded && (
+                    <div className="pt-2 border-t border-slate-700/50">
+                      <Link
+                        href={`/dashboard/documentos/${patientId}/consulta/${appt.id}`}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white hover:border-slate-600 transition-colors text-xs font-medium w-full justify-center"
+                      >
+                        <FileText size={13} className="text-[#f06292]" />
+                        Generar PDF de esta consulta
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
