@@ -7,6 +7,41 @@ import { formatDate, formatTime, formatCurrency, getStatusColor, getStatusLabel,
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 
+const TEMPLATES: Record<string, string> = {
+  'control-prenatal': `Semanas de gestación:
+Peso: kg | TA:  /  mmHg
+Altura uterina: cm | LCF: lpm
+Movimientos fetales:
+Edemas:
+Indicaciones:
+Próximo control: semana `,
+
+  'ginecologia': `Motivo de consulta:
+Antecedentes:
+Examen físico:
+PAP:
+Indicaciones: `,
+
+  'fertilidad': `Ciclo: días | FUR:
+Estudios previos:
+Tratamiento:
+Respuesta:
+Próximos pasos: `,
+
+  'planificacion': `Método actual:
+Motivo de consulta:
+Indicaciones: `,
+
+  'menopausia': `Síntomas:
+Última menstruación:
+Tratamiento:
+Indicaciones: `,
+
+  'otro': `Motivo:
+Evaluación:
+Indicaciones: `,
+}
+
 interface Props {
   patientId: string
   appointments: Appointment[]
@@ -160,9 +195,17 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
                   {/* Consultation notes */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <FileText size={13} className="text-slate-400" />
                         <span className="text-slate-400 text-xs font-medium uppercase tracking-wide">Notas de consulta</span>
+                        {appt.service_type && TEMPLATES[appt.service_type] && (
+                          <button
+                            onClick={() => setNotesMap(prev => ({ ...prev, [appt.id]: TEMPLATES[appt.service_type!] }))}
+                            className="text-slate-600 hover:text-[#f06292] text-xs transition-colors underline underline-offset-2"
+                          >
+                            usar plantilla
+                          </button>
+                        )}
                       </div>
                       {notesChanged && (
                         <button
@@ -179,8 +222,8 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
                       value={notes}
                       onChange={(e) => setNotesMap(prev => ({ ...prev, [appt.id]: e.target.value }))}
                       placeholder="Notas de esta consulta..."
-                      rows={3}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-600 focus:outline-none focus:border-[#f06292] transition-colors text-sm resize-none"
+                      rows={notes && notes.includes('\n') ? Math.max(4, notes.split('\n').length + 1) : 3}
+                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-600 focus:outline-none focus:border-[#f06292] transition-colors text-sm resize-none font-mono"
                     />
                   </div>
 
