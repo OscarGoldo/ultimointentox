@@ -1,27 +1,18 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { Phone, Mail, MessageCircle, Calendar, TrendingUp, ArrowLeft } from 'lucide-react'
 import {
-  Phone,
-  Mail,
-  MessageCircle,
-  Calendar,
-  TrendingUp,
-  ArrowLeft,
-  Clock,
-} from 'lucide-react'
-import {
-  formatDate,
   formatDateShort,
-  formatTime,
   formatCurrency,
-  getStatusColor,
-  getStatusLabel,
-  getServiceLabel,
   buildWhatsAppUrl,
   getInitials,
 } from '@/lib/utils'
 import { Appointment } from '@/lib/types'
+import DeletePatientButton from './components/DeletePatientButton'
+import PregnancyToggle from './components/PregnancyToggle'
+import AppointmentHistorySection from './components/AppointmentHistorySection'
+import PatientInsights from './components/PatientInsights'
 
 export const dynamic = 'force-dynamic'
 
@@ -96,6 +87,15 @@ export default async function PatientDetailPage({
           </div>
         </div>
 
+        {/* Pregnancy status */}
+        <div className="mt-4">
+          <PregnancyToggle
+            patientId={id}
+            initialIsPregnant={!!patient.is_pregnant}
+            initialStartDate={patient.pregnancy_start_date || undefined}
+          />
+        </div>
+
         {/* Contact buttons */}
         <div className="flex gap-2 mt-4">
           {phone && (
@@ -126,10 +126,15 @@ export default async function PatientDetailPage({
             <p className="text-white text-sm">{patient.notes}</p>
           </div>
         )}
+
+        {/* Delete */}
+        <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end">
+          <DeletePatientButton patientId={id} />
+        </div>
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Calendar size={15} className="text-slate-400" />
@@ -158,41 +163,12 @@ export default async function PatientDetailPage({
         </div>
       </div>
 
-      {/* Appointment timeline */}
+      {/* AI Insights */}
+      <PatientInsights patientId={id} />
+
+      {/* Appointment history */}
       <h2 className="text-white font-semibold text-sm mb-3">Historial de citas</h2>
-      <div className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden">
-        {appts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Clock size={32} className="text-slate-600 mb-3" />
-            <p className="text-slate-400 text-sm">Sin citas registradas</p>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-700">
-            {appts.map((appt) => (
-              <div key={appt.id} className="px-4 py-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-white text-sm font-medium">
-                      {formatDate(appt.appointment_date)}
-                    </p>
-                    <p className="text-slate-400 text-xs mt-0.5">
-                      {formatTime(appt.appointment_time)} · {getServiceLabel(appt.service_type)}
-                    </p>
-                    {appt.revenue != null && (
-                      <p className="text-[#f06292] text-xs mt-1">{formatCurrency(appt.revenue)}</p>
-                    )}
-                  </div>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium border flex-shrink-0 ${getStatusColor(appt.status)}`}
-                  >
-                    {getStatusLabel(appt.status)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <AppointmentHistorySection patientId={id} appointments={appts} />
     </div>
   )
 }

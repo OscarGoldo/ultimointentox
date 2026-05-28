@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Users, AlertTriangle, UserMinus, UserCheck } from 'lucide-react'
+import { Users, Baby, UserMinus, UserCheck } from 'lucide-react'
 import { formatDateShort, buildWhatsAppUrl, getInitials } from '@/lib/utils'
 import { Patient } from '@/lib/types'
 import PatientSearch from './PatientSearch'
@@ -10,8 +10,8 @@ export const dynamic = 'force-dynamic'
 const SIX_MONTHS_AGO = new Date()
 SIX_MONTHS_AGO.setMonth(SIX_MONTHS_AGO.getMonth() - 6)
 
-const FOURTEEN_MONTHS_AGO = new Date()
-FOURTEEN_MONTHS_AGO.setMonth(FOURTEEN_MONTHS_AGO.getMonth() - 14)
+const TWELVE_MONTHS_AGO = new Date()
+TWELVE_MONTHS_AGO.setMonth(TWELVE_MONTHS_AGO.getMonth() - 12)
 
 interface SearchParams {
   q?: string
@@ -42,14 +42,15 @@ export default async function PacientesPage({
     .select('*', { count: 'exact', head: true })
     .gte('last_visit_date', SIX_MONTHS_AGO.toISOString().split('T')[0])
 
-  const { count: atRiskCount } = await supabase
-    .from('at_risk_patients')
+  const { count: pregnantCount } = await supabase
+    .from('patients')
     .select('*', { count: 'exact', head: true })
+    .eq('is_pregnant', true)
 
   const { count: inactiveCount } = await supabase
     .from('patients')
     .select('*', { count: 'exact', head: true })
-    .lt('last_visit_date', FOURTEEN_MONTHS_AGO.toISOString().split('T')[0])
+    .lt('last_visit_date', TWELVE_MONTHS_AGO.toISOString().split('T')[0])
 
   // Build patient query based on filter
   let patientQuery = supabase
@@ -63,12 +64,10 @@ export default async function PacientesPage({
 
   if (filter === 'activas') {
     patientQuery = patientQuery.gte('last_visit_date', SIX_MONTHS_AGO.toISOString().split('T')[0])
-  } else if (filter === 'en-riesgo') {
-    patientQuery = patientQuery
-      .lt('last_visit_date', SIX_MONTHS_AGO.toISOString().split('T')[0])
-      .gte('last_visit_date', FOURTEEN_MONTHS_AGO.toISOString().split('T')[0])
+  } else if (filter === 'embarazo') {
+    patientQuery = patientQuery.eq('is_pregnant', true)
   } else if (filter === 'inactivas') {
-    patientQuery = patientQuery.lt('last_visit_date', FOURTEEN_MONTHS_AGO.toISOString().split('T')[0])
+    patientQuery = patientQuery.lt('last_visit_date', TWELVE_MONTHS_AGO.toISOString().split('T')[0])
   }
 
   const from = (page - 1) * pageSize
@@ -76,19 +75,21 @@ export default async function PacientesPage({
 
   const { data: patients } = await patientQuery.range(from, to)
 
-  // At-risk patients for the alert section
-  const { data: atRiskPatients } = await supabase
-    .from('at_risk_patients')
+  // Pregnant patients for the alert section
+  const { data: pregnantPatients } = await supabase
+    .from('patients')
     .select('*')
+    .eq('is_pregnant', true)
+    .order('pregnancy_start_date', { ascending: true })
     .limit(5)
 
   const patientList: Patient[] = patients || []
-  const atRisk: Patient[] = atRiskPatients || []
+  const pregnant: Patient[] = pregnantPatients || []
 
   const filterTabs = [
     { key: 'todas', label: 'Todas', count: totalCount || 0 },
     { key: 'activas', label: 'Activas', count: activeCount || 0 },
-    { key: 'en-riesgo', label: 'En riesgo', count: atRiskCount || 0 },
+    { key: 'embarazo', label: 'Embarazo', count: pregnantCount || 0 },
     { key: 'inactivas', label: 'Inactivas', count: inactiveCount || 0 },
   ]
 
@@ -115,10 +116,10 @@ export default async function PacientesPage({
           color="text-emerald-400"
         />
         <SegCard
-          label="En riesgo"
-          count={atRiskCount || 0}
-          icon={<AlertTriangle size={18} className="text-orange-400" />}
-          color="text-orange-400"
+          label="Embarazo"
+          count={pregnantCount || 0}
+          icon={<Baby size={18} className="text-pink-400" />}
+          color="text-pink-400"
         />
         <SegCard
           label="Inactivas"
@@ -128,27 +129,27 @@ export default async function PacientesPage({
         />
       </div>
 
-      {/* At-risk patients alert */}
-      {atRisk.length > 0 && filter !== 'en-riesgo' && !query && (
-        <div className="bg-orange-400/10 border border-orange-400/30 rounded-2xl p-4 mb-6">
+      {/* Pregnant patients alert */}
+      {pregnant.length > 0 && filter !== 'embarazo' && !query && (
+        <div className="bg-pink-400/10 border border-pink-400/30 rounded-2xl p-4 mb-6">
           <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle size={16} className="text-orange-400" />
-            <h2 className="text-orange-400 font-semibold text-sm">Pacientes en riesgo de pérdida</h2>
+            <Baby size={16} className="text-pink-400" />
+            <h2 className="text-pink-400 font-semibold text-sm">Pacientes embarazadas</h2>
           </div>
           <div className="space-y-2">
-            {atRisk.map((p) => {
-              const waMsg = `Hola ${p.name.split(' ')[0]}, le escribimos del consultorio de la Dra. Hilda Díaz García. Notamos que hace tiempo no tiene una cita. ¿Le gustaría programar una consulta?`
+            {pregnant.map((p) => {
+              const waMsg = `Hola ${p.name.split(' ')[0]}, le escribimos del consultorio de la Dra. Hilda Díaz García. ¿Cómo va su embarazo? ¿Le gustaría agendar su próxima consulta?`
               const waUrl = p.phone ? buildWhatsAppUrl(p.phone, waMsg) : null
               return (
                 <div key={p.id} className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-orange-400/20 flex items-center justify-center flex-shrink-0">
-                      <span className="text-orange-400 text-xs font-bold">{getInitials(p.name)}</span>
+                    <div className="w-7 h-7 rounded-full bg-pink-400/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-pink-400 text-xs font-bold">{getInitials(p.name)}</span>
                     </div>
                     <div className="min-w-0">
                       <p className="text-white text-sm font-medium truncate">{p.name}</p>
                       <p className="text-slate-400 text-xs">
-                        Última visita: {p.last_visit_date ? formatDateShort(p.last_visit_date) : 'Nunca'}
+                        {p.pregnancy_start_date ? `Embarazo desde: ${formatDateShort(p.pregnancy_start_date)}` : 'Embarazada'}
                       </p>
                     </div>
                   </div>
@@ -166,9 +167,9 @@ export default async function PacientesPage({
               )
             })}
           </div>
-          {(atRiskCount || 0) > 5 && (
-            <Link href="/dashboard/pacientes?filter=en-riesgo" className="block text-center text-orange-400 text-xs mt-3 hover:underline">
-              Ver todas las {atRiskCount} pacientes en riesgo →
+          {(pregnantCount || 0) > 5 && (
+            <Link href="/dashboard/pacientes?filter=embarazo" className="block text-center text-pink-400 text-xs mt-3 hover:underline">
+              Ver todas las {pregnantCount} pacientes embarazadas →
             </Link>
           )}
         </div>

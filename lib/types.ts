@@ -21,6 +21,8 @@ export interface Patient {
   last_visit_date?: string
   total_visits: number
   notes?: string
+  is_pregnant?: boolean
+  pregnancy_start_date?: string
   created_at: string
 }
 
@@ -41,15 +43,22 @@ export interface Appointment {
   created_at: string
 }
 
+export interface Study {
+  id: string
+  appointment_id?: string
+  patient_id: string
+  name: string
+  description?: string
+  file_url?: string
+  file_name?: string
+  created_at: string
+}
+
 export interface ServicePrice {
   id: string
   service_type: string
   label: string
   price: number
-}
-
-export interface AtRiskPatient extends Patient {
-  months_since_visit?: number
 }
 
 export interface MonthlyStats {

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { CheckCircle, Clock, CalendarDays, UserPlus, AlertTriangle } from 'lucide-react'
+import { CheckCircle, Clock, CalendarDays, UserPlus, Baby } from 'lucide-react'
 import { Appointment } from '@/lib/types'
 import { getGreeting, getTodayString } from '@/lib/utils'
 import AppointmentSection from './components/AppointmentSection'
@@ -20,10 +20,11 @@ export default async function HoyPage() {
     .eq('appointment_date', today)
     .order('appointment_time', { ascending: true })
 
-  // At-risk patients count
-  const { count: atRiskCount } = await supabase
-    .from('at_risk_patients')
+  // Pregnant patients count
+  const { count: pregnantCount } = await supabase
+    .from('patients')
     .select('*', { count: 'exact', head: true })
+    .eq('is_pregnant', true)
 
   const appts: Appointment[] = appointments || []
   const total = appts.length
@@ -75,16 +76,16 @@ export default async function HoyPage() {
       {/* Appointment List */}
       <AppointmentSection defaultDate={today} initialAppointments={appts} />
 
-      {/* Pending Actions */}
-      {(atRiskCount ?? 0) > 0 && (
-        <div className="bg-orange-400/10 border border-orange-400/30 rounded-2xl p-4">
+      {/* Pregnant patients alert */}
+      {(pregnantCount ?? 0) > 0 && (
+        <div className="bg-pink-400/10 border border-pink-400/30 rounded-2xl p-4">
           <div className="flex items-center gap-3">
-            <AlertTriangle size={20} className="text-orange-400 flex-shrink-0" />
+            <Baby size={20} className="text-pink-400 flex-shrink-0" />
             <div>
-              <p className="text-orange-400 font-semibold text-sm">Pacientes en riesgo</p>
+              <p className="text-pink-400 font-semibold text-sm">Pacientes embarazadas</p>
               <p className="text-slate-400 text-xs mt-0.5">
-                {atRiskCount} paciente{atRiskCount !== 1 ? 's' : ''} sin visita en más de 6 meses.{' '}
-                <Link href="/dashboard/pacientes?filter=en-riesgo" className="text-orange-400 underline">
+                {pregnantCount} paciente{pregnantCount !== 1 ? 's' : ''} actualmente embarazada{pregnantCount !== 1 ? 's' : ''}.{' '}
+                <Link href="/dashboard/pacientes?filter=embarazo" className="text-pink-400 underline">
                   Ver lista
                 </Link>
               </p>
