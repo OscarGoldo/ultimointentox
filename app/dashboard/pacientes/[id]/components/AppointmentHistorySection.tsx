@@ -71,7 +71,10 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
         const ext = selectedFile.name.split('.').pop()
         const path = `${patientId}/${apptId}/${Date.now()}.${ext}`
         const { data: up, error: upErr } = await supabase.storage.from('studies').upload(path, selectedFile)
-        if (upErr) throw upErr
+        if (upErr) {
+          toast.error(`Error al subir archivo: ${upErr.message}`)
+          return
+        }
         const { data: urlData } = supabase.storage.from('studies').getPublicUrl(up.path)
         file_url = urlData.publicUrl
         file_name = selectedFile.name
@@ -82,15 +85,19 @@ export default function AppointmentHistorySection({ patientId, appointments: ini
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ appointment_id: apptId, patient_id: patientId, name: studyForm.name, description: studyForm.description || undefined, file_url, file_name }),
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        toast.error(`Error al guardar estudio: ${err.error || res.status}`)
+        return
+      }
       const study = await res.json()
       setAppts(prev => prev.map(a => a.id === apptId ? { ...a, studies: [...(a.studies || []), study] } : a))
       setAddingStudy(null)
       setStudyForm({ name: '', description: '' })
       setSelectedFile(null)
       toast.success('Estudio agregado')
-    } catch {
-      toast.error('Error al agregar estudio')
+    } catch (e: unknown) {
+      toast.error(`Error: ${e instanceof Error ? e.message : 'desconocido'}`)
     } finally {
       setUploadingStudy(false)
     }
