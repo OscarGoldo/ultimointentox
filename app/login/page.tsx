@@ -34,7 +34,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center mb-8">
           <div className="mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/Logo2.png" alt="Logo" width={80} height={80} className="object-contain" />
+            <img src="/images/Logo2%20-%20copia.png" alt="Logo" width={80} height={80} className="object-contain" />
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight">
             Hilda Díaz <span className="text-[#f06292]">·</span> Panel
