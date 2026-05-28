@@ -43,6 +43,15 @@ export interface Appointment {
   created_at: string
 }
 
+export interface Expense {
+  id: string
+  date: string
+  amount: number
+  category: string
+  description?: string
+  created_at: string
+}
+
 export interface Study {
   id: string
   appointment_id?: string

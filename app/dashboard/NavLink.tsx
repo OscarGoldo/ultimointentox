@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CalendarDays, BarChart2, Users, TrendingUp, Settings, type LucideIcon } from 'lucide-react'
+import { CalendarDays, BarChart2, Users, TrendingUp, Settings, Wallet, type LucideIcon } from 'lucide-react'
 
 const ICONS: Record<string, LucideIcon> = {
   CalendarDays,
@@ -10,6 +10,7 @@ const ICONS: Record<string, LucideIcon> = {
   Users,
   TrendingUp,
   Settings,
+  Wallet,
 }
 
 interface Props {
