@@ -34,7 +34,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <div className="mb-4">
-            <Image src="/Logo2 - copia.png" alt="Logo" width={80} height={80} className="object-contain" />
+            <Image src="/images/Logo2 - copia.png" alt="Logo" width={80} height={80} className="object-contain" />
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight">
             Hilda Díaz <span className="text-[#f06292]">·</span> Panel
