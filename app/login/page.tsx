@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { Heart, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -32,8 +33,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#f06292]/20 border border-[#f06292]/40 flex items-center justify-center mb-4">
-            <Heart className="text-[#f06292]" size={28} fill="currentColor" />
+          <div className="mb-4">
+            <Image src="/Logo2 - copia.png" alt="Logo" width={80} height={80} className="object-contain" />
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight">
             Hilda Díaz <span className="text-[#f06292]">·</span> Panel
