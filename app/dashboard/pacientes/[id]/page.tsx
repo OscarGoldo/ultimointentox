@@ -10,6 +10,7 @@ import {
 } from '@/lib/utils'
 import { Appointment } from '@/lib/types'
 import DeletePatientButton from './components/DeletePatientButton'
+import EditPatientModal from './components/EditPatientModal'
 import PregnancyToggle from './components/PregnancyToggle'
 import AppointmentHistorySection from './components/AppointmentHistorySection'
 import PatientInsights from './components/PatientInsights'
@@ -127,8 +128,9 @@ export default async function PatientDetailPage({
           </div>
         )}
 
-        {/* Delete */}
-        <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end">
+        {/* Edit / Delete */}
+        <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center justify-between">
+          <EditPatientModal patient={patient} />
           <DeletePatientButton patientId={id} />
         </div>
       </div>
