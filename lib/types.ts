@@ -17,6 +17,7 @@ export interface Patient {
   name: string
   email?: string
   phone?: string
+  cedula?: string
   first_visit_date?: string
   last_visit_date?: string
   total_visits: number

@@ -10,6 +10,7 @@ export default function EditPatientModal({ patient }: { patient: Patient }) {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     name: patient.name,
+    cedula: patient.cedula || '',
     phone: patient.phone || '',
     email: patient.email || '',
     notes: patient.notes || '',
@@ -20,6 +21,7 @@ export default function EditPatientModal({ patient }: { patient: Patient }) {
   function openModal() {
     setForm({
       name: patient.name,
+      cedula: patient.cedula || '',
       phone: patient.phone || '',
       email: patient.email || '',
       notes: patient.notes || '',
@@ -36,6 +38,7 @@ export default function EditPatientModal({ patient }: { patient: Patient }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name.trim(),
+          cedula: form.cedula.trim() || null,
           phone: form.phone.trim() || null,
           email: form.email.trim() || null,
           notes: form.notes.trim() || null,
@@ -90,6 +93,16 @@ export default function EditPatientModal({ patient }: { patient: Patient }) {
                   type="text"
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-600 focus:outline-none focus:border-[#f06292] text-sm transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-400 text-xs mb-1">Cédula de identidad</label>
+                <input
+                  type="text"
+                  value={form.cedula}
+                  onChange={e => setForm(f => ({ ...f, cedula: e.target.value }))}
+                  placeholder="Ej: V-12345678"
                   className="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-600 focus:outline-none focus:border-[#f06292] text-sm transition-colors"
                 />
               </div>

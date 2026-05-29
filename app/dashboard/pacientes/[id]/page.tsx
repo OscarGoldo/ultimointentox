@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { Phone, Mail, MessageCircle, Calendar, TrendingUp, ArrowLeft, FileText } from 'lucide-react'
+import { Phone, Mail, MessageCircle, Calendar, TrendingUp, ArrowLeft, FileText, CreditCard } from 'lucide-react'
 import {
   formatDateShort,
   formatCurrency,
@@ -66,6 +66,12 @@ export default async function PatientDetailPage({
           <div className="flex-1 min-w-0">
             <h1 className="text-white text-xl font-bold">{patient.name}</h1>
             <div className="mt-2 space-y-1.5">
+              {patient.cedula && (
+                <p className="flex items-center gap-2 text-slate-400 text-sm">
+                  <CreditCard size={14} />
+                  {patient.cedula}
+                </p>
+              )}
               {phone && (
                 <a
                   href={`tel:${phone}`}
