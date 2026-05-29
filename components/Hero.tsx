@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Phone } from "lucide-react";
-import { useCalBooking } from "@/components/CalBookingModal";
 
 export default function Hero() {
-  const { openModal } = useCalBooking();
-
   return (
     <section
       id="inicio"
@@ -15,14 +13,8 @@ export default function Hero() {
     >
       {/* Fondo decorativo */}
       <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-sky-50 -z-10" aria-hidden="true" />
-      <div
-        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-rose-100/40 blur-3xl -z-10"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sky-100/40 blur-3xl -z-10"
-        aria-hidden="true"
-      />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-rose-100/40 blur-3xl -z-10" aria-hidden="true" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sky-100/40 blur-3xl -z-10" aria-hidden="true" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -48,14 +40,14 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={openModal}
+              <Link
+                href="/reservar"
                 aria-label="Ver disponibilidad de citas con la Dra. Hilda Díaz"
                 className="inline-flex items-center justify-center gap-2 bg-[#f06292] text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] hover:shadow-rose-300 transition-all duration-200 group"
               >
                 <Phone size={18} aria-hidden="true" className="group-hover:scale-110 transition-transform" />
                 Ver disponibilidad
-              </button>
+              </Link>
               <a
                 href="#servicios"
                 onClick={(e) => {

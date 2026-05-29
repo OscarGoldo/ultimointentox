@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Menu, X, Phone } from "lucide-react";
-import { useCalBooking } from "@/components/CalBookingModal";
 
 const navLinks = [
   { href: "#inicio", label: "Inicio" },
@@ -16,7 +16,6 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { openModal } = useCalBooking();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -27,18 +26,14 @@ export default function Header() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
+    if (target) target.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm"
-          : "bg-white/80 backdrop-blur-sm"
+        isScrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-white/80 backdrop-blur-sm"
       }`}
       role="banner"
     >
@@ -79,14 +74,14 @@ export default function Header() {
                 <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-[#f06292] group-hover:w-full transition-all duration-200" />
               </a>
             ))}
-            <button
-              onClick={openModal}
+            <Link
+              href="/reservar"
               aria-label="Agendar cita"
               className="flex items-center gap-2 bg-[#f06292] text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-[#ec407a] transition-colors duration-200"
             >
               <Phone size={14} aria-hidden="true" />
               Agendar Cita
-            </button>
+            </Link>
           </nav>
 
           {/* Mobile menu button */}
@@ -115,13 +110,14 @@ export default function Header() {
                 {link.label}
               </a>
             ))}
-            <button
-              onClick={() => { openModal(); setIsMenuOpen(false); }}
+            <Link
+              href="/reservar"
+              onClick={() => setIsMenuOpen(false)}
               className="mt-2 flex items-center justify-center gap-2 bg-[#f06292] text-white font-semibold px-4 py-3 rounded-full hover:bg-[#ec407a] transition-colors"
             >
               <Phone size={16} aria-hidden="true" />
               Agendar Cita
-            </button>
+            </Link>
           </nav>
         </div>
       )}
