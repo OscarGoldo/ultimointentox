@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { addDays, format, isWeekend, parseISO, startOfDay, isBefore } from 'date-fns'
+import { addDays, format, parseISO, startOfDay, isBefore } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Calendar, Clock, User, Phone, Mail, CreditCard, ChevronRight, ChevronLeft, CheckCircle, Loader2, Heart, FileText } from 'lucide-react'
 
