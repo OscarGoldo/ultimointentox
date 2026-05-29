@@ -40,12 +40,11 @@ type Step = 'form' | 'success'
 
 export default function ReservarPage() {
   const today = startOfDay(new Date())
-  const tomorrow = addDays(today, 1)
   const maxDate = addDays(today, 60)
 
   const [step, setStep] = useState<Step>('form')
-  const [calYear, setCalYear] = useState(tomorrow.getFullYear())
-  const [calMonth, setCalMonth] = useState(tomorrow.getMonth())
+  const [calYear, setCalYear] = useState(today.getFullYear())
+  const [calMonth, setCalMonth] = useState(today.getMonth())
   const [selectedDate, setSelectedDate] = useState<string>('')
   const [selectedTime, setSelectedTime] = useState<string>('')
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
@@ -60,7 +59,7 @@ export default function ReservarPage() {
 
   const calDays = buildCalendarDays(calYear, calMonth)
 
-  const canGoPrev = !(calYear === tomorrow.getFullYear() && calMonth === tomorrow.getMonth())
+  const canGoPrev = !(calYear === today.getFullYear() && calMonth === today.getMonth())
   function prevMonth() {
     if (!canGoPrev) return
     if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11) }
@@ -215,7 +214,7 @@ export default function ReservarPage() {
                 if (!day) return <div key={`empty-${i}`} />
                 const dow = day.getDay()
                 const isWeekendDay = dow === 0 || dow === 6
-                const isPast = isBefore(startOfDay(day), tomorrow)
+                const isPast = isBefore(startOfDay(day), today)
                 const isTooFar = isBefore(maxDate, startOfDay(day))
                 const disabled = isWeekendDay || isPast || isTooFar
                 const dateStr = toDateStr(day)

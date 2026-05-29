@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 
 // Mon–Fri slots (08:00–12:00 and 14:00–17:00), one per hour
 const ALL_SLOTS = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00']
+const HOURS_AHEAD = 4
 
 export async function GET(request: NextRequest) {
   const date = request.nextUrl.searchParams.get('date')
@@ -24,7 +25,19 @@ export async function GET(request: NextRequest) {
     .not('status', 'in', '("cancelled","no_show")')
 
   const taken = (data || []).map(a => a.appointment_time.slice(0, 5))
-  const available = ALL_SLOTS.filter(s => !taken.includes(s))
+  let available = ALL_SLOTS.filter(s => !taken.includes(s))
+
+  // For today: only show slots at least HOURS_AHEAD hours from now
+  const todayStr = new Date().toISOString().split('T')[0]
+  if (date === todayStr) {
+    const cutoff = new Date(Date.now() + HOURS_AHEAD * 60 * 60 * 1000)
+    available = available.filter(slot => {
+      const [h, m] = slot.split(':')
+      const slotTime = new Date()
+      slotTime.setHours(parseInt(h), parseInt(m), 0, 0)
+      return slotTime >= cutoff
+    })
+  }
 
   return NextResponse.json({ available, taken })
 }

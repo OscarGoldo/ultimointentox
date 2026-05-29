@@ -167,12 +167,16 @@ export async function POST(request: NextRequest) {
 
     if (apptErr) return NextResponse.json({ error: apptErr.message }, { status: 500 })
 
-    // Send emails (non-blocking — don't fail the request if email fails)
-    sendEmails({ patientName: name, patientEmail: email, date, time, service }).catch(err =>
-      console.error('Email error:', err)
-    )
+    // Send emails — await so we can report status
+    let emailSent = false
+    try {
+      await sendEmails({ patientName: name, patientEmail: email, date, time, service })
+      emailSent = true
+    } catch (emailErr) {
+      console.error('Email error:', emailErr)
+    }
 
-    return NextResponse.json({ success: true, appointmentId: appt.id })
+    return NextResponse.json({ success: true, appointmentId: appt.id, emailSent })
   } catch (e) {
     console.error(e)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
