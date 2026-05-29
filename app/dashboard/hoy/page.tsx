@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { format } from 'date-fns'
+import { format, addDays, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { CheckCircle, Clock, CalendarDays, UserPlus, Baby } from 'lucide-react'
 import { Appointment } from '@/lib/types'
-import { getGreeting, getTodayString } from '@/lib/utils'
+import { getGreeting, getTodayString, formatTime, getStatusColor, getStatusLabel, getServiceLabel, getInitials } from '@/lib/utils'
 import AppointmentSection from './components/AppointmentSection'
 
 export const dynamic = 'force-dynamic'
@@ -12,12 +12,23 @@ export const dynamic = 'force-dynamic'
 export default async function HoyPage() {
   const supabase = await createClient()
   const today = getTodayString()
+  const in30days = format(addDays(new Date(), 30), 'yyyy-MM-dd')
 
   // Fetch today's appointments with patient data
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*, patient:patients(*)')
     .eq('appointment_date', today)
+    .order('appointment_time', { ascending: true })
+
+  // Fetch upcoming appointments (tomorrow → +30 days)
+  const { data: upcomingRaw } = await supabase
+    .from('appointments')
+    .select('*, patient:patients(*)')
+    .gt('appointment_date', today)
+    .lte('appointment_date', in30days)
+    .not('status', 'in', '("cancelled","no_show")')
+    .order('appointment_date', { ascending: true })
     .order('appointment_time', { ascending: true })
 
   // Pregnant patients count
@@ -28,6 +39,19 @@ export default async function HoyPage() {
 
   const appts: Appointment[] = appointments || []
   const total = appts.length
+
+  // Group upcoming by date
+  const upcomingByDate: { date: string; label: string; appts: Appointment[] }[] = []
+  for (const appt of (upcomingRaw || [])) {
+    const last = upcomingByDate[upcomingByDate.length - 1]
+    if (last && last.date === appt.appointment_date) {
+      last.appts.push(appt)
+    } else {
+      const d = parseISO(appt.appointment_date)
+      const label = format(d, "EEEE d 'de' MMMM", { locale: es })
+      upcomingByDate.push({ date: appt.appointment_date, label, appts: [appt] })
+    }
+  }
   const confirmed = appts.filter((a) => a.status === 'confirmed').length
   const pending = appts.filter((a) => a.status === 'scheduled').length
   const newPatients = appts.filter((a) => a.is_first_visit).length
@@ -75,6 +99,53 @@ export default async function HoyPage() {
 
       {/* Appointment List */}
       <AppointmentSection defaultDate={today} initialAppointments={appts} />
+
+      {/* Upcoming appointments */}
+      {upcomingByDate.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-white font-semibold text-sm mb-3">Próximas citas</h2>
+          <div className="space-y-3">
+            {upcomingByDate.map(({ date, label, appts: dayAppts }) => (
+              <div key={date} className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
+                  <p className="text-slate-300 text-sm font-medium capitalize">{label}</p>
+                  <span className="text-slate-500 text-xs">{dayAppts.length} cita{dayAppts.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="divide-y divide-slate-700">
+                  {dayAppts.map((appt) => (
+                    <Link
+                      key={appt.id}
+                      href={`/dashboard/pacientes/${appt.patient_id}`}
+                      className="px-4 py-3 flex items-center gap-3 hover:bg-slate-700/50 transition-colors"
+                    >
+                      <div className="text-right flex-shrink-0 w-14">
+                        <p className="text-white text-sm font-medium">{formatTime(appt.appointment_time)}</p>
+                      </div>
+                      <div className="w-9 h-9 rounded-full bg-[#f06292]/20 border border-[#f06292]/30 flex items-center justify-center flex-shrink-0">
+                        <span className="text-[#f06292] text-xs font-bold">
+                          {getInitials(appt.patient?.name || 'P')}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm font-medium truncate">
+                          {appt.patient?.name || 'Paciente'}
+                        </p>
+                        <p className="text-slate-400 text-xs truncate">
+                          {getServiceLabel(appt.service_type)}
+                          {appt.is_first_visit && <span className="ml-1.5 text-[#f06292]">· Primera vez</span>}
+                        </p>
+                      </div>
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium border flex-shrink-0 ${getStatusColor(appt.status)}`}>
+                        {getStatusLabel(appt.status)}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Pregnant patients alert */}
       {(pregnantCount ?? 0) > 0 && (
