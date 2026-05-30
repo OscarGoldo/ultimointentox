@@ -18,6 +18,15 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createServiceClient()
+
+  // Check if date is blocked by the doctor
+  const { data: blocked } = await supabase
+    .from('blocked_dates')
+    .select('id')
+    .eq('date', date)
+    .maybeSingle()
+  if (blocked) return NextResponse.json({ available: [], taken: ALL_SLOTS, blocked: true })
+
   const { data } = await supabase
     .from('appointments')
     .select('appointment_time')
