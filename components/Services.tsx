@@ -131,8 +131,8 @@ export default function Services() {
             ¿Tienes dudas sobre algún servicio? Con gusto te orientamos.
           </p>
           <a
-            href="tel:+584120896444"
-            aria-label="Llamar para consultar servicios"
+            href="https://oz-med.vercel.app/reservar/hildadiaz"
+            aria-label="Agendar consulta en línea"
             className="inline-flex items-center gap-2 bg-[#f06292] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] transition-all duration-200"
           >
             Agendar Consulta

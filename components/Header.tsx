@@ -75,7 +75,7 @@ export default function Header() {
               </a>
             ))}
             <Link
-              href="/reservar"
+              href="https://oz-med.vercel.app/reservar/hildadiaz"
               aria-label="Agendar cita"
               className="flex items-center gap-2 bg-[#f06292] text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-[#ec407a] transition-colors duration-200"
             >
@@ -111,7 +111,7 @@ export default function Header() {
               </a>
             ))}
             <Link
-              href="/reservar"
+              href="https://oz-med.vercel.app/reservar/hildadiaz"
               onClick={() => setIsMenuOpen(false)}
               className="mt-2 flex items-center justify-center gap-2 bg-[#f06292] text-white font-semibold px-4 py-3 rounded-full hover:bg-[#ec407a] transition-colors"
             >

@@ -41,7 +41,7 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/reservar"
+                href="https://oz-med.vercel.app/reservar/hildadiaz"
                 aria-label="Ver disponibilidad de citas con la Dra. Hilda Díaz"
                 className="inline-flex items-center justify-center gap-2 bg-[#f06292] text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] hover:shadow-rose-300 transition-all duration-200 group"
               >
