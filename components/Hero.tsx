@@ -16,30 +16,30 @@ export default function Hero() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-rose-100/40 blur-3xl -z-10" aria-hidden="true" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sky-100/40 blur-3xl -z-10" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-6 w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           {/* Texto */}
           <div className="order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 text-[#f06292] text-sm font-semibold px-4 py-2 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 text-[#f06292] text-sm font-semibold px-4 py-2 rounded-full mb-4">
               <span className="w-2 h-2 bg-[#f06292] rounded-full animate-pulse" aria-hidden="true" />
               Consultando en Clínica Tierra Santa, Maturín
             </div>
 
             <h1
               id="hero-heading"
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4"
+              className="text-4xl sm:text-5xl lg:text-5xl font-bold text-gray-900 leading-tight mb-3"
             >
               Ginecóloga, Obstetra y{" "}
               <span className="text-[#f06292]">Especialista en Fertilidad</span>{" "}
               en Maturín
             </h1>
 
-            <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg">
+            <p className="text-base lg:text-lg text-gray-600 leading-relaxed mb-6 max-w-lg">
               Más de 20 años acompañando mujeres en <strong>Maturín, Monagas</strong> y el oriente venezolano.
               Atención en fertilidad, obstetricia y ginecología general en Clínica Tierra Santa.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/reservar"
                 aria-label="Ver disponibilidad de citas con la Dra. Hilda Díaz"
@@ -68,7 +68,7 @@ export default function Hero() {
                 className="absolute inset-0 scale-110 rounded-[2rem] bg-gradient-to-br from-rose-200 to-sky-200 rotate-3"
                 aria-hidden="true"
               />
-              <div className="relative w-[300px] h-[420px] sm:w-[380px] sm:h-[520px] rounded-[2rem] overflow-hidden shadow-2xl">
+              <div className="relative w-[260px] h-[360px] sm:w-[320px] sm:h-[440px] lg:w-[340px] lg:h-[460px] rounded-[2rem] overflow-hidden shadow-2xl">
                 <Image
                   src="/images/foto1.jpg"
                   alt="Dra. Hilda Mary Díaz García - Ginecóloga Obstetra en Maturín"
