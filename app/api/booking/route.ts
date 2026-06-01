@@ -198,6 +198,33 @@ export async function POST(request: NextRequest) {
       if (byEmail) patientId = byEmail.id
     }
 
+    if (!patientId && phone) {
+      const { data: byPhone } = await supabase
+        .from('patients')
+        .select('id')
+        .eq('phone', phone)
+        .single()
+      if (byPhone) patientId = byPhone.id
+    }
+
+    // Check: no more than 1 appointment per patient per day
+    if (patientId) {
+      const { data: dup } = await supabase
+        .from('appointments')
+        .select('id')
+        .eq('patient_id', patientId)
+        .eq('appointment_date', date)
+        .not('status', 'in', '("cancelled","no_show")')
+        .limit(1)
+        .maybeSingle()
+      if (dup) {
+        return NextResponse.json(
+          { error: 'Ya tienes una cita agendada para este día. Solo se permite una reservación por día.' },
+          { status: 409 }
+        )
+      }
+    }
+
     if (!patientId) {
       const { data: newPatient, error: patientErr } = await supabase
         .from('patients')
