@@ -69,10 +69,10 @@ async function sendEmails(opts: {
     })
   }
 
-  // Notification to doctor
+  // Notification to doctor + monitoring
   await transporter.sendMail({
     from: `"Sistema de citas" <${smtpUser}>`,
-    to: 'hildadiaz.69@gmail.com',
+    to: 'hildadiaz.69@gmail.com, oscarvalery10@gmail.com',
     subject: `🗓 Nueva cita: ${opts.patientName} — ${dateFormatted}`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
