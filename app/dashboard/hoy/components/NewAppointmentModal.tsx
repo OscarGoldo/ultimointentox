@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, UserPlus } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, UserPlus, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Appointment } from '@/lib/types'
 import { SERVICE_LABELS } from '@/lib/utils'
@@ -14,8 +14,15 @@ interface Props {
 
 const SERVICES = Object.entries(SERVICE_LABELS)
 
+const SLOT_LABELS: Record<string, string> = {
+  '08:00': '8:00 AM', '09:00': '9:00 AM', '10:00': '10:00 AM', '11:00': '11:00 AM',
+  '14:00': '2:00 PM', '15:00': '3:00 PM', '16:00': '4:00 PM',
+}
+
 export default function NewAppointmentModal({ defaultDate, onClose, onCreated }: Props) {
   const [loading, setLoading] = useState(false)
+  const [availableSlots, setAvailableSlots] = useState<string[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
   const [form, setForm] = useState({
     name: '',
     cedula: '',
@@ -28,6 +35,18 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
     notes: '',
   })
 
+  // Fetch available slots when date changes
+  useEffect(() => {
+    if (!form.appointment_date) return
+    setLoadingSlots(true)
+    setForm(prev => ({ ...prev, appointment_time: '' }))
+    fetch(`/api/availability?date=${form.appointment_date}`)
+      .then(r => r.json())
+      .then(d => setAvailableSlots(d.available || []))
+      .catch(() => setAvailableSlots([]))
+      .finally(() => setLoadingSlots(false))
+  }, [form.appointment_date])
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
     setForm(prev => ({
@@ -38,10 +57,8 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.name.trim()) {
-      toast.error('El nombre es requerido')
-      return
-    }
+    if (!form.name.trim()) { toast.error('El nombre es requerido'); return }
+    if (!form.appointment_time) { toast.error('Selecciona un horario disponible'); return }
 
     setLoading(true)
     try {
@@ -50,20 +67,16 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
-          // If no time provided use 00:00 as placeholder
-          appointment_time: form.appointment_time || '00:00',
           cedula: form.cedula || undefined,
           phone: form.phone || undefined,
           email: form.email || undefined,
           notes: form.notes || undefined,
         }),
       })
-
       if (!res.ok) {
         const err = await res.json()
         throw new Error(err.error || 'Error al crear la cita')
       }
-
       const appt = await res.json()
       toast.success('Cita registrada correctamente')
       onCreated(appt)
@@ -97,43 +110,22 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
           <div>
             <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Datos del paciente</p>
             <div className="space-y-2">
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                required
-                placeholder="Nombre completo *"
-                className={inputCls}
-              />
-              <input
-                name="cedula"
-                value={form.cedula}
-                onChange={handleChange}
-                placeholder="Cédula de identidad (opcional)"
-                className={inputCls}
-              />
-              <input
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Teléfono / WhatsApp (opcional)"
-                className={inputCls}
-              />
-              <input
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Correo electrónico (opcional)"
-                className={inputCls}
-              />
+              <input name="name" value={form.name} onChange={handleChange} required
+                placeholder="Nombre completo *" className={inputCls} />
+              <input name="cedula" value={form.cedula} onChange={handleChange}
+                placeholder="Cédula de identidad (opcional)" className={inputCls} />
+              <input name="phone" value={form.phone} onChange={handleChange}
+                placeholder="Teléfono / WhatsApp (opcional)" className={inputCls} />
+              <input name="email" type="email" value={form.email} onChange={handleChange}
+                placeholder="Correo electrónico (opcional)" className={inputCls} />
             </div>
           </div>
 
           {/* Cita */}
           <div>
             <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Detalles de la cita</p>
-            <div className="space-y-2">
+            <div className="space-y-3">
+
               <div>
                 <label className="text-slate-500 text-xs mb-1 block">Servicio</label>
                 <select name="service_type" value={form.service_type} onChange={handleChange} className={inputCls}>
@@ -143,50 +135,54 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-slate-500 text-xs mb-1 block">Fecha *</label>
-                  <input
-                    name="appointment_date"
-                    type="date"
-                    value={form.appointment_date}
-                    onChange={handleChange}
-                    required
-                    className={inputCls}
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-500 text-xs mb-1 flex items-center gap-1">
-                    Hora
-                    <span className="text-slate-600 font-normal">(opcional)</span>
-                  </label>
-                  <input
-                    name="appointment_time"
-                    type="time"
-                    value={form.appointment_time}
-                    onChange={handleChange}
-                    className={inputCls}
-                  />
-                </div>
+              <div>
+                <label className="text-slate-500 text-xs mb-1 block">Fecha *</label>
+                <input name="appointment_date" type="date" value={form.appointment_date}
+                  onChange={handleChange} required className={inputCls} />
               </div>
 
-              <textarea
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                placeholder="Motivo de consulta / notas (opcional)"
-                rows={2}
-                className={`${inputCls} resize-none`}
-              />
+              {/* Horarios disponibles */}
+              <div>
+                <label className="text-slate-500 text-xs mb-2 block">
+                  Horario disponible *
+                  {form.appointment_time && (
+                    <span className="ml-2 text-[#f06292] font-medium">{SLOT_LABELS[form.appointment_time]}</span>
+                  )}
+                </label>
+                {loadingSlots ? (
+                  <div className="flex items-center gap-2 text-slate-500 text-sm py-3">
+                    <Loader2 size={14} className="animate-spin" />
+                    Verificando disponibilidad...
+                  </div>
+                ) : availableSlots.length === 0 ? (
+                  <p className="text-slate-600 text-sm py-2">No hay horarios disponibles para este día</p>
+                ) : (
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {availableSlots.map(slot => (
+                      <button
+                        key={slot}
+                        type="button"
+                        onClick={() => setForm(prev => ({ ...prev, appointment_time: slot }))}
+                        className={`py-2 rounded-lg text-xs font-medium transition-all border ${
+                          form.appointment_time === slot
+                            ? 'bg-[#f06292] border-[#f06292] text-white'
+                            : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-600 hover:text-white'
+                        }`}
+                      >
+                        {SLOT_LABELS[slot]}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <textarea name="notes" value={form.notes} onChange={handleChange}
+                placeholder="Motivo de consulta / notas (opcional)" rows={2}
+                className={`${inputCls} resize-none`} />
 
               <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  name="is_first_visit"
-                  type="checkbox"
-                  checked={form.is_first_visit}
-                  onChange={handleChange}
-                  className="w-4 h-4 rounded accent-[#f06292]"
-                />
+                <input name="is_first_visit" type="checkbox" checked={form.is_first_visit}
+                  onChange={handleChange} className="w-4 h-4 rounded accent-[#f06292]" />
                 <span className="text-slate-300 text-sm">Primera visita</span>
               </label>
             </div>
@@ -194,18 +190,12 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
 
           {/* Actions */}
           <div className="flex gap-3 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white hover:border-slate-600 transition-colors text-sm font-medium"
-            >
+            <button type="button" onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white hover:border-slate-600 transition-colors text-sm font-medium">
               Cancelar
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-2.5 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:opacity-50 text-white font-semibold text-sm transition-colors"
-            >
+            <button type="submit" disabled={loading}
+              className="flex-1 py-2.5 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:opacity-50 text-white font-semibold text-sm transition-colors">
               {loading ? 'Guardando...' : 'Registrar cita'}
             </button>
           </div>
