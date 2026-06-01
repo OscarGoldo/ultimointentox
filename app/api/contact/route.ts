@@ -12,13 +12,13 @@ export async function POST(req: NextRequest) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.SMTP_USER2,
+        pass: process.env.SMTP_PASS2,
       },
     });
 
     await transporter.sendMail({
-      from: `"Web Dra. Hilda Díaz" <${process.env.SMTP_USER}>`,
+      from: `"Web Dra. Hilda Díaz" <${process.env.SMTP_USER2}>`,
       to: "doc.hildadiaz@gmail.com",
       subject: `Nueva solicitud de cita — ${esc(nombre)}`,
       html: `
