@@ -48,82 +48,78 @@ async function sendEmails(opts: {
       from: `"Consultorio Dra. Hilda Díaz" <${smtpUser}>`,
       to: opts.patientEmail,
       subject: '✓ Cita confirmada — Dra. Hilda Díaz García',
-      html: `
-<!DOCTYPE html>
-<html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,Helvetica,sans-serif">
-  <div style="max-width:580px;margin:32px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
+      html: `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cita confirmada</title></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-    <!-- Header -->
-    <div style="background:linear-gradient(135deg,#f06292 0%,#e91e8c 100%);padding:36px 32px;text-align:center">
-      <div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">
-        <span style="font-size:28px">✓</span>
-      </div>
-      <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:700;letter-spacing:-0.5px">¡Cita confirmada!</h1>
-      <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:14px">Su reservación ha sido recibida con éxito</p>
-    </div>
+  <!-- Header rosa -->
+  <tr><td style="background-color:#f06292;border-radius:16px 16px 0 0;padding:40px 32px;text-align:center;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+      <div style="display:inline-block;background-color:#e91e8c;width:64px;height:64px;border-radius:50%;text-align:center;line-height:64px;font-size:30px;color:#ffffff;margin-bottom:16px;">✓</div>
+      <h1 style="margin:0;color:#ffffff;font-family:Arial,sans-serif;font-size:26px;font-weight:700;">¡Cita Confirmada!</h1>
+      <p style="margin:10px 0 0;color:#fce7f3;font-family:Arial,sans-serif;font-size:14px;">Su reservación ha sido recibida con éxito</p>
+    </td></tr></table>
+  </td></tr>
 
-    <!-- Body -->
-    <div style="padding:32px">
-      <p style="color:#374151;font-size:15px;margin:0 0 8px">Estimada <strong>${opts.patientName}</strong>,</p>
-      <p style="color:#6b7280;font-size:14px;margin:0 0 28px;line-height:1.6">
-        Su cita ha sido confirmada con la <strong style="color:#111827">Dra. Hilda Mary Díaz García</strong>,
-        Médico Especialista en Ginecología y Obstetricia.
-      </p>
+  <!-- Cuerpo blanco -->
+  <tr><td style="background-color:#ffffff;padding:36px 32px;">
 
-      <!-- Details card -->
-      <div style="background:#fdf2f8;border:1px solid #fce7f3;border-radius:12px;overflow:hidden;margin-bottom:28px">
-        <div style="padding:12px 20px;background:#f9a8d4;background:linear-gradient(to right,#fce7f3,#fdf2f8)">
-          <p style="margin:0;font-size:11px;font-weight:700;color:#be185d;letter-spacing:1px;text-transform:uppercase">Detalles de su cita</p>
-        </div>
-        <div style="padding:4px 0">
-          <table style="width:100%;border-collapse:collapse">
-            <tr>
-              <td style="padding:14px 20px;color:#9ca3af;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;width:35%">📅 Fecha</td>
-              <td style="padding:14px 20px;color:#111827;font-size:14px;font-weight:600;text-transform:capitalize">${dateFormatted}</td>
-            </tr>
-            <tr style="background:#fdf2f8">
-              <td style="padding:14px 20px;color:#9ca3af;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">🕐 Hora</td>
-              <td style="padding:14px 20px;color:#111827;font-size:14px;font-weight:600">${timeFormatted}</td>
-            </tr>
-            <tr>
-              <td style="padding:14px 20px;color:#9ca3af;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">🏥 Servicio</td>
-              <td style="padding:14px 20px;color:#111827;font-size:14px;font-weight:600">${serviceLabel}</td>
-            </tr>
-            <tr style="background:#fdf2f8">
-              <td style="padding:14px 20px;color:#9ca3af;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">📍 Lugar</td>
-              <td style="padding:14px 20px;color:#111827;font-size:14px">Clínica Tierra Santa, Piso 3, Cons. 3<br><span style="color:#6b7280;font-size:13px">Maturín, Estado Monagas</span></td>
-            </tr>
-          </table>
-        </div>
-      </div>
+    <p style="margin:0 0 6px;font-family:Arial,sans-serif;font-size:16px;color:#111827;">Estimada <strong>${opts.patientName}</strong>,</p>
+    <p style="margin:0 0 28px;font-family:Arial,sans-serif;font-size:14px;color:#6b7280;line-height:1.6;">Su cita ha sido confirmada con la <strong style="color:#111827;">Dra. Hilda Mary Díaz García</strong>, Médico Especialista en Ginecología y Obstetricia.</p>
 
-      <!-- Notice -->
-      <div style="background:#fffbeb;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:28px">
-        <p style="margin:0;color:#92400e;font-size:13px;line-height:1.5">
-          ⚠️ Para cancelar o reprogramar, comuníquese con al menos <strong>24 horas de anticipación</strong>.
-        </p>
-      </div>
+    <!-- Detalles -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px;overflow:hidden;border:1px solid #fce7f3;margin-bottom:28px;">
+      <tr><td colspan="2" style="background-color:#fdf2f8;padding:12px 20px;border-bottom:1px solid #fce7f3;">
+        <span style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;color:#be185d;letter-spacing:1px;text-transform:uppercase;">Detalles de su cita</span>
+      </td></tr>
+      <tr style="background-color:#ffffff;">
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;color:#9ca3af;width:38%;">📅 FECHA</td>
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:14px;color:#111827;font-weight:700;text-transform:capitalize;">${dateFormatted}</td>
+      </tr>
+      <tr style="background-color:#fdf2f8;">
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;color:#9ca3af;">🕐 HORA</td>
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:14px;color:#111827;font-weight:700;">${timeFormatted}</td>
+      </tr>
+      <tr style="background-color:#ffffff;">
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;color:#9ca3af;">🩺 SERVICIO</td>
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:14px;color:#111827;font-weight:700;">${serviceLabel}</td>
+      </tr>
+      <tr style="background-color:#fdf2f8;">
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;color:#9ca3af;">📍 LUGAR</td>
+        <td style="padding:14px 20px;font-family:Arial,sans-serif;font-size:14px;color:#111827;">Clínica Tierra Santa, Piso 3, Consultorio 3<br><span style="color:#6b7280;font-size:13px;">Maturín, Estado Monagas</span></td>
+      </tr>
+    </table>
 
-      <!-- Contact -->
-      <p style="color:#6b7280;font-size:13px;margin:0">
-        📞 <a href="tel:+584120896444" style="color:#f06292;text-decoration:none">0412-089-6444</a> &nbsp;·&nbsp;
-        Lunes a Viernes 8:00 AM – 5:00 PM
-      </p>
-    </div>
+    <!-- Aviso -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+      <tr>
+        <td width="4" style="background-color:#f59e0b;border-radius:4px;">&nbsp;</td>
+        <td style="background-color:#fffbeb;padding:14px 16px;border-radius:0 8px 8px 0;">
+          <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:#92400e;line-height:1.5;">⚠️ Para cancelar o reprogramar, comuníquese con al menos <strong>24 horas de anticipación</strong>.</p>
+        </td>
+      </tr>
+    </table>
 
-    <!-- Footer -->
-    <div style="background:#f9fafb;border-top:1px solid #f3f4f6;padding:20px 32px;text-align:center">
-      <p style="margin:0;color:#9ca3af;font-size:12px">
-        © Consultorio Dra. Hilda Mary Díaz García · Maturín, Venezuela
-      </p>
-    </div>
+    <!-- Contacto -->
+    <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:#6b7280;">
+      📞 <a href="tel:+584120896444" style="color:#f06292;text-decoration:none;font-weight:600;">0412-089-6444</a>
+      &nbsp;&nbsp;·&nbsp;&nbsp;Lunes a Viernes, 8:00 AM – 5:00 PM
+    </p>
 
-  </div>
-</body>
-</html>
-      `,
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td style="background-color:#f9fafb;border-top:1px solid #f3f4f6;border-radius:0 0 16px 16px;padding:20px 32px;text-align:center;">
+    <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;color:#9ca3af;">© Consultorio Dra. Hilda Mary Díaz García &nbsp;·&nbsp; Maturín, Venezuela</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`,
     })
   }
 
