@@ -40,7 +40,7 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
     if (!form.appointment_date) return
     setLoadingSlots(true)
     setForm(prev => ({ ...prev, appointment_time: '' }))
-    fetch(`/api/availability?date=${form.appointment_date}`)
+    fetch(`/api/availability?date=${form.appointment_date}&admin=1`)
       .then(r => r.json())
       .then(d => setAvailableSlots(d.available || []))
       .catch(() => setAvailableSlots([]))

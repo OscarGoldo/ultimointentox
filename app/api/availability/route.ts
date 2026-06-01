@@ -36,9 +36,10 @@ export async function GET(request: NextRequest) {
   const taken = (data || []).map(a => a.appointment_time.slice(0, 5))
   let available = ALL_SLOTS.filter(s => !taken.includes(s))
 
-  // For today: only show slots at least HOURS_AHEAD hours from now
+  // Skip 4-hour restriction for admin/manual bookings
+  const isAdmin = request.nextUrl.searchParams.get('admin') === '1'
   const todayStr = new Date().toISOString().split('T')[0]
-  if (date === todayStr) {
+  if (!isAdmin && date === todayStr) {
     const cutoff = new Date(Date.now() + HOURS_AHEAD * 60 * 60 * 1000)
     available = available.filter(slot => {
       const [h, m] = slot.split(':')
