@@ -18,6 +18,7 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     name: '',
+    cedula: '',
     phone: '',
     email: '',
     appointment_date: defaultDate,
@@ -29,7 +30,7 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
-    setForm((prev) => ({
+    setForm(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }))
@@ -37,8 +38,8 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.name.trim() || !form.appointment_time) {
-      toast.error('Nombre y hora son requeridos')
+    if (!form.name.trim()) {
+      toast.error('El nombre es requerido')
       return
     }
 
@@ -49,6 +50,9 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          // If no time provided use 00:00 as placeholder
+          appointment_time: form.appointment_time || '00:00',
+          cedula: form.cedula || undefined,
           phone: form.phone || undefined,
           email: form.email || undefined,
           notes: form.notes || undefined,
@@ -70,11 +74,14 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
     }
   }
 
+  const inputCls = 'w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] transition-colors text-sm'
+
   return (
     <div className="fixed inset-0 bg-black/70 flex items-end sm:items-center justify-center z-50 p-4">
       <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
+
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-700 sticky top-0 bg-slate-800">
+        <div className="flex items-center justify-between p-4 border-b border-slate-700 sticky top-0 bg-slate-800 z-10">
           <div className="flex items-center gap-2">
             <UserPlus size={18} className="text-[#f06292]" />
             <h2 className="text-white font-semibold text-sm">Nueva cita manual</h2>
@@ -85,9 +92,10 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          {/* Patient info */}
+
+          {/* Paciente */}
           <div>
-            <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Paciente</p>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Datos del paciente</p>
             <div className="space-y-2">
               <input
                 name="name"
@@ -95,30 +103,46 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
                 onChange={handleChange}
                 required
                 placeholder="Nombre completo *"
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] transition-colors text-sm"
+                className={inputCls}
+              />
+              <input
+                name="cedula"
+                value={form.cedula}
+                onChange={handleChange}
+                placeholder="Cédula de identidad (opcional)"
+                className={inputCls}
               />
               <input
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
-                placeholder="Teléfono (opcional)"
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] transition-colors text-sm"
+                placeholder="Teléfono / WhatsApp (opcional)"
+                className={inputCls}
               />
               <input
                 name="email"
                 type="email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="Correo (opcional)"
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] transition-colors text-sm"
+                placeholder="Correo electrónico (opcional)"
+                className={inputCls}
               />
             </div>
           </div>
 
-          {/* Appointment info */}
+          {/* Cita */}
           <div>
-            <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Cita</p>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Detalles de la cita</p>
             <div className="space-y-2">
+              <div>
+                <label className="text-slate-500 text-xs mb-1 block">Servicio</label>
+                <select name="service_type" value={form.service_type} onChange={handleChange} className={inputCls}>
+                  {SERVICES.map(([value, label]) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-slate-500 text-xs mb-1 block">Fecha *</label>
@@ -128,43 +152,31 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
                     value={form.appointment_date}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-[#f06292] transition-colors text-sm"
+                    className={inputCls}
                   />
                 </div>
                 <div>
-                  <label className="text-slate-500 text-xs mb-1 block">Hora *</label>
+                  <label className="text-slate-500 text-xs mb-1 flex items-center gap-1">
+                    Hora
+                    <span className="text-slate-600 font-normal">(opcional)</span>
+                  </label>
                   <input
                     name="appointment_time"
                     type="time"
                     value={form.appointment_time}
                     onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-[#f06292] transition-colors text-sm"
+                    className={inputCls}
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="text-slate-500 text-xs mb-1 block">Servicio</label>
-                <select
-                  name="service_type"
-                  value={form.service_type}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-[#f06292] transition-colors text-sm"
-                >
-                  {SERVICES.map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
               </div>
 
               <textarea
                 name="notes"
                 value={form.notes}
                 onChange={handleChange}
-                placeholder="Notas (opcional)"
+                placeholder="Motivo de consulta / notas (opcional)"
                 rows={2}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#f06292] transition-colors text-sm resize-none"
+                className={`${inputCls} resize-none`}
               />
 
               <label className="flex items-center gap-2.5 cursor-pointer">
@@ -192,7 +204,7 @@ export default function NewAppointmentModal({ defaultDate, onClose, onCreated }:
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-colors"
+              className="flex-1 py-2.5 rounded-xl bg-[#f06292] hover:bg-[#e91e8c] disabled:opacity-50 text-white font-semibold text-sm transition-colors"
             >
               {loading ? 'Guardando...' : 'Registrar cita'}
             </button>

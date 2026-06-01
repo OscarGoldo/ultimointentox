@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 
 interface AppointmentBody {
   name: string
+  cedula?: string
   phone?: string
   email?: string
   appointment_date: string
@@ -16,19 +17,28 @@ export async function POST(request: NextRequest) {
   try {
     const body: AppointmentBody = await request.json()
 
-    if (!body.name || !body.appointment_date || !body.appointment_time) {
+    if (!body.name || !body.appointment_date) {
       return NextResponse.json(
-        { error: 'name, appointment_date y appointment_time son requeridos' },
+        { error: 'name y appointment_date son requeridos' },
         { status: 400 }
       )
     }
 
     const supabase = await createClient()
 
-    // Find existing patient by email or phone
+    // Find existing patient by cedula, email or phone
     let patientId: string | null = null
 
-    if (body.email) {
+    if (body.cedula) {
+      const { data } = await supabase
+        .from('patients')
+        .select('id')
+        .eq('cedula', body.cedula)
+        .maybeSingle()
+      if (data) patientId = data.id
+    }
+
+    if (!patientId && body.email) {
       const { data } = await supabase
         .from('patients')
         .select('id')
@@ -47,11 +57,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (patientId) {
-      // Update name/phone if found
       await supabase
         .from('patients')
         .update({
           name: body.name,
+          ...(body.cedula ? { cedula: body.cedula } : {}),
           ...(body.phone ? { phone: body.phone } : {}),
           ...(body.email ? { email: body.email } : {}),
         })
@@ -62,6 +72,7 @@ export async function POST(request: NextRequest) {
         .from('patients')
         .insert({
           name: body.name,
+          cedula: body.cedula || null,
           phone: body.phone || null,
           email: body.email || null,
           first_visit_date: body.is_first_visit ? body.appointment_date : null,
