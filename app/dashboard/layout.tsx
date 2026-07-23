@@ -53,6 +53,7 @@ export default async function DashboardLayout({
           {navItems.map(({ href, label, iconName }) => (
             <NavLink key={href} href={href} label={label} iconName={iconName} />
           ))}
+          <NavLink href="/dashboard/ebook" label="Ebook" iconName="BookOpen" />
           <NavLink
             href="/dashboard/configuracion/precios"
             label="Configuración"

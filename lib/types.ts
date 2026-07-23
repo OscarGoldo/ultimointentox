@@ -79,3 +79,30 @@ export interface MonthlyStats {
   completed: number
   no_show: number
 }
+
+// ── Tienda del Ebook (Supabase separado) ─────────────────────────────
+
+export type EbookOrderStatus = 'pendiente' | 'confirmada' | 'rechazada'
+
+export type EbookPaymentMethod = 'zelle' | 'pago_movil'
+
+export interface EbookOrder {
+  id: string
+  customer_name: string
+  customer_email: string
+  customer_phone?: string | null
+  payment_method: EbookPaymentMethod
+  /** Precio cobrado en USD (Zelle). */
+  amount_usd: number
+  /** Monto cotizado en bolívares (Pago Móvil), si aplica. */
+  amount_bs?: number | null
+  /** Tasa euro BCV usada para el monto en Bs. */
+  bcv_rate?: number | null
+  payment_reference?: string | null
+  /** Ruta del comprobante dentro del bucket `comprobantes`. */
+  proof_path?: string | null
+  status: EbookOrderStatus
+  /** Momento en que la doctora confirmó el pago. */
+  confirmed_at?: string | null
+  created_at: string
+}
