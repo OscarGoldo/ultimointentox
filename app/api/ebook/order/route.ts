@@ -177,8 +177,9 @@ async function sendEmails(opts: {
 </table></td></tr></table></body></html>`,
   });
 
-  // Correo a la doctora — nueva compra, revisar comprobante
-  const dashUrl = `${opts.origin}/dashboard/ebook`;
+  // Correo a la doctora — nueva compra, revisar comprobante.
+  // El panel de confirmación vive en el CRM (OzMed), no en este storefront.
+  const dashUrl = 'https://oz-med.vercel.app/dashboard/ebook';
   await t.sendMail({
     from: `"Tienda Ebook" <${from}>`,
     to: DOCTOR_EMAILS,
