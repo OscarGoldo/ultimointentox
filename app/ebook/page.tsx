@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Check, BookOpen, ShieldCheck, Download, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, ShieldCheck, Download, Users } from "lucide-react";
 import BookCover from "@/components/BookCover";
 import CheckoutForm from "./CheckoutForm";
 import { EBOOK } from "@/lib/ebook";

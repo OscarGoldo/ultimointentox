@@ -5,7 +5,7 @@ import {
   PROOFS_BUCKET,
 } from "@/lib/supabase/ebook";
 import { getEuroBcvRate, usdToBs, formatBs } from "@/lib/bcv";
-import { EBOOK, PAYMENT } from "@/lib/ebook";
+import { EBOOK } from "@/lib/ebook";
 import type { EbookPaymentMethod } from "@/lib/types";
 
 const DOCTOR_EMAILS = "hildadiaz.69@gmail.com, oscarvalery10@gmail.com";
