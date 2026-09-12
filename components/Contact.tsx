@@ -22,7 +22,7 @@ const contactInfo = [
     icon: MapPin,
     label: "Dirección",
     value: "Clínica Tierra Santa, Piso 3, Consultorio 3 — Maturín, Venezuela",
-    href: "https://maps.google.com/?q=Clinica+Tierra+Santa+Maturin+Venezuela",
+    href: "https://maps.google.com/?cid=16483700920212677160",
   },
   {
     icon: Clock,
@@ -158,15 +158,18 @@ export default function Contact() {
 
             <Reveal delay={80}>
               <div className="card overflow-hidden p-0">
+                {/* Apunta a su ficha de Google Maps por CID, no a la avenida
+                    genérica: así el pin cae en el consultorio y el usuario ve
+                    la tarjeta del negocio con la dirección y el teléfono. */}
                 <iframe
-                  src="https://maps.google.com/maps?q=Av+Fuerzas+Armadas%2C+Matur%C3%ADn+6201%2C+Monagas%2C+Venezuela&output=embed&hl=es&z=16"
+                  src="https://maps.google.com/maps?cid=16483700920212677160&hl=es&z=17&output=embed"
                   width="100%"
                   height="280"
                   style={{ border: 0, display: "block" }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicación del consultorio de la Dra. Hilda Díaz en Maturín"
+                  title="Consultorio de la Dra. Hilda Díaz en Google Maps — Clínica Tierra Santa, Maturín"
                   className="map-tint"
                 />
               </div>

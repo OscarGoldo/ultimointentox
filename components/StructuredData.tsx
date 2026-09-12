@@ -1,5 +1,8 @@
 const SITE = "https://drahildadiaz.com";
 
+/** Ficha de Google Maps del consultorio (CID de su Perfil de Empresa). */
+const MAPS_URL = "https://maps.google.com/?cid=16483700920212677160";
+
 /**
  * Datos estructurados schema.org del consultorio.
  *
@@ -16,7 +19,7 @@ const consultorio = {
   "@type": "Physician",
   "@id": `${SITE}/#consultorio`,
   name: "Dra. Hilda Mary Díaz García",
-  alternateName: "Consultorio de la Dra. Hilda Díaz",
+  alternateName: ["Dra. Hilda Diaz", "Consultorio de la Dra. Hilda Díaz"],
   description:
     "Consultorio de ginecología, obstetricia y fertilidad en Maturín, Monagas. Control prenatal, ecografía obstétrica, colposcopia, planificación familiar y tratamientos de reproducción asistida.",
   url: SITE,
@@ -30,11 +33,16 @@ const consultorio = {
   address: {
     "@type": "PostalAddress",
     name: "Clínica Tierra Santa, Piso 3, Consultorio 3",
-    streetAddress: "Av. Fuerzas Armadas, Clínica Tierra Santa, Piso 3, Consultorio 3",
+    streetAddress: "Piso 3, Consultorio 3, Clínica Tierra Santa, Av Fuerzas Armadas",
     addressLocality: "Maturín",
     addressRegion: "Monagas",
     postalCode: "6201",
     addressCountry: "VE",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 9.7422905,
+    longitude: -63.1689793,
   },
   areaServed: [
     { "@type": "City", name: "Maturín" },
@@ -48,9 +56,8 @@ const consultorio = {
       closes: "17:00",
     },
   ],
-  hasMap:
-    "https://maps.google.com/?q=Clinica+Tierra+Santa+Maturin+Venezuela",
-  sameAs: ["https://www.instagram.com/doc.hildadiaz/"],
+  hasMap: MAPS_URL,
+  sameAs: [MAPS_URL, "https://www.instagram.com/doc.hildadiaz/"],
   availableService: [
     { "@type": "MedicalProcedure", name: "Control prenatal" },
     { "@type": "MedicalProcedure", name: "Consulta de ginecología general" },
@@ -96,7 +103,7 @@ const profesional = {
     identifier: "1947",
   },
   knowsLanguage: "es",
-  sameAs: ["https://www.instagram.com/doc.hildadiaz/"],
+  sameAs: [MAPS_URL, "https://www.instagram.com/doc.hildadiaz/"],
 };
 
 export default function StructuredData() {
