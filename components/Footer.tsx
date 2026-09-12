@@ -1,124 +1,123 @@
-import Image from "next/image";
-import { Phone, Mail, MapPin, Instagram } from "lucide-react";
+import Link from "next/link";
+import { Phone, Mail, MapPin, Instagram, ArrowRight } from "lucide-react";
+import Wordmark from "@/components/Wordmark";
+
+const especialidades = [
+  "Control Prenatal",
+  "Ginecología General",
+  "Fertilidad y Reproducción",
+  "Planificación Familiar",
+  "Colposcopia y PAP",
+  "Menopausia y Climaterio",
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-gray-300" role="contentinfo">
-      {/* Franja superior con CTA */}
-      <div className="bg-[#f06292] py-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-            Tu salud es nuestra prioridad
-          </h2>
-          <p className="text-rose-100 mb-6">
-            Agenda tu consulta hoy y comienza el camino hacia tu bienestar.
-          </p>
-          <a
-            href="tel:+584120896444"
-            aria-label="Llamar para agendar cita"
-            className="inline-flex items-center gap-2 bg-white text-[#f06292] font-bold px-8 py-4 rounded-full hover:bg-rose-50 transition-colors duration-200 shadow-lg"
-          >
-            <Phone size={18} aria-hidden="true" />
-            Agendar Cita Ahora
-          </a>
+    <footer className="bg-magenta-dark text-on-dark-soft" role="contentinfo">
+      {/* Llamada final */}
+      <div className="border-b border-line-dark">
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-8 px-5 py-16 text-center sm:px-8 lg:flex-row lg:justify-between lg:py-20 lg:text-left">
+          <div>
+            <h2 className="display text-[2rem] text-on-dark sm:text-[2.5rem]">
+              Tu salud es nuestra prioridad
+            </h2>
+            <p className="mt-3 max-w-lg text-[15.5px] leading-relaxed text-on-dark-soft">
+              Agenda tu consulta hoy y comienza el camino hacia tu bienestar.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="https://ozmedical.app/reservar/hildadiaz"
+              className="btn btn-light group shrink-0"
+            >
+              Agendar cita
+              <ArrowRight
+                size={17}
+                strokeWidth={2}
+                aria-hidden="true"
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </Link>
+            <a
+              href="tel:+584120896444"
+              aria-label="Llamar al consultorio"
+              className="btn tnum shrink-0 border-white/30 text-white hover:bg-white/10"
+            >
+              <Phone size={16} strokeWidth={2} aria-hidden="true" />
+              0412 089 6444
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Cuerpo del footer */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {/* Columna logo */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 relative bg-white rounded-xl p-1">
-                <Image
-                  src="/images/Logo2.png"
-                  alt="Logo Dra. Hilda Díaz García"
-                  fill
-                  className="object-contain p-1"
-                />
-              </div>
-              <div>
-                <p className="font-bold text-white text-sm leading-tight">Dra. Hilda Mary Díaz García</p>
-                <p className="text-xs text-gray-400">Gineco · Obstetra · Fertilidad</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Más de 20 años dedicados a la salud de la mujer venezolana con atención personalizada y de calidad.
+      {/* Cuerpo */}
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <Wordmark tone="light" />
+          <p className="mt-6 max-w-xs text-[13.5px] leading-relaxed">
+            Más de 20 años dedicados a la salud de la mujer venezolana, con
+            atención personalizada en Maturín, Monagas.
+          </p>
+          <a
+            href="https://www.instagram.com/doc.hildadiaz/?hl=es"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de la Dra. Hilda Díaz"
+            className="mt-7 inline-grid h-11 w-11 place-items-center rounded-full border border-white/25 text-white transition-colors hover:border-white hover:bg-white/10"
+          >
+            <Instagram size={17} strokeWidth={2} aria-hidden="true" />
+          </a>
+        </div>
+
+        <nav aria-label="Especialidades" className="lg:col-span-4">
+          <h3 className="eyebrow text-on-dark">Especialidades</h3>
+          <ul className="mt-5 space-y-2.5 text-[13.5px]">
+            {especialidades.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="lg:col-span-3">
+          <h3 className="eyebrow text-on-dark">Consultorio</h3>
+          <address className="mt-5 space-y-4 text-[13.5px] not-italic leading-relaxed">
+            <p className="flex gap-3">
+              <MapPin size={15} strokeWidth={2} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <span>
+                Clínica Tierra Santa
+                <br />
+                Piso 3, Consultorio 3
+                <br />
+                Maturín, Monagas
+              </span>
             </p>
-            <div className="flex gap-3 mt-5">
-              <a
-                href="https://www.instagram.com/doc.hildadiaz/?hl=es"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram de la Dra. Hilda Díaz"
-                className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-[#f06292] hover:bg-gray-700 transition-colors"
-              >
-                <Instagram size={17} aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-
-          {/* Columna servicios */}
-          <nav aria-label="Servicios médicos">
-            <h3 className="font-bold text-white mb-4 text-sm uppercase tracking-wider">
-              Especialidades
-            </h3>
-            <ul className="space-y-2 text-sm">
-              {[
-                "Control Prenatal",
-                "Ginecología General",
-                "Fertilidad y Reproducción",
-                "Planificación Familiar",
-                "Colposcopia y PAP",
-                "Menopausia y Climaterio",
-              ].map((s) => (
-                <li key={s}>
-                  <span className="text-gray-400 hover:text-rose-300 transition-colors cursor-default">
-                    {s}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Columna contacto */}
-          <div>
-            <h3 className="font-bold text-white mb-4 text-sm uppercase tracking-wider">
-              Información de Contacto
-            </h3>
-            <address className="not-italic space-y-3 text-sm">
+            <p className="flex flex-col gap-2">
               <a
                 href="tel:+584120896444"
-                className="flex items-start gap-3 text-gray-400 hover:text-rose-300 transition-colors"
+                className="tnum flex items-center gap-3 text-on-dark transition-colors hover:text-white"
               >
-                <Phone size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
-                0412-089-6444
+                <Phone size={15} strokeWidth={2} className="shrink-0" aria-hidden="true" />
+                0412 089 6444
               </a>
               <a
                 href="mailto:dochildadiaz@gmail.com"
-                className="flex items-start gap-3 text-gray-400 hover:text-rose-300 transition-colors"
+                className="flex items-center gap-3 break-all text-on-dark transition-colors hover:text-white"
               >
-                <Mail size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <Mail size={15} strokeWidth={2} className="shrink-0" aria-hidden="true" />
                 dochildadiaz@gmail.com
               </a>
-              <div className="flex items-start gap-3 text-gray-400">
-                <MapPin size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
-                <span>
-                  Clínica Tierra Santa<br />
-                  Piso 3, Consultorio 3<br />
-                  Maturín, Monagas, Venezuela
-                </span>
-              </div>
-            </address>
-          </div>
+            </p>
+          </address>
         </div>
+      </div>
 
-        {/* Barra inferior */}
-        <div className="mt-10 pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <p>
+      {/* Pie */}
+      <div className="border-t border-line-dark">
+        <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-2 px-5 py-6 text-[11.5px] sm:flex-row sm:px-8">
+          <p className="tnum">
             © {currentYear} Dra. Hilda Mary Díaz García · RIF V-10353086-1
           </p>
           <p>Maturín, Venezuela</p>

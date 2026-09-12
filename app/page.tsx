@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Statement from "@/components/Statement";
 import Services from "@/components/Services";
 import EbookSection from "@/components/EbookSection";
 import Contact from "@/components/Contact";
@@ -15,6 +16,7 @@ export default function Home() {
       <main id="main-content">
         <Hero />
         <About />
+        <Statement />
         <Services />
         <EbookSection />
         <Contact />

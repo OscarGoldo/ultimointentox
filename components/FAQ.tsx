@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Plus, Phone } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import SectionHeading from "@/components/SectionHeading";
 
 const faqs = [
   {
@@ -42,97 +44,87 @@ const faqs = [
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section
-      id="faq"
-      className="py-20 sm:py-28 bg-gradient-to-b from-gray-50 to-white"
-      aria-labelledby="faq-heading"
-    >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Encabezado */}
-        <div className="text-center mb-14">
-          <p className="text-sm font-semibold text-[#f06292] uppercase tracking-widest mb-2">
-            Preguntas Frecuentes
-          </p>
-          <h2
-            id="faq-heading"
-            className="text-3xl sm:text-4xl font-bold text-gray-900"
-          >
-            Resolvemos tus dudas
-          </h2>
-          <div className="mt-3 mx-auto w-16 h-1 bg-[#f06292] rounded-full" aria-hidden="true" />
-        </div>
+    <section id="faq" className="bg-cream py-24 lg:py-32" aria-labelledby="faq-heading">
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+        <SectionHeading
+          label="Preguntas frecuentes"
+          headingId="faq-heading"
+          title="Resolvemos tus dudas"
+          lead="Lo que las pacientes suelen preguntar antes de su primera visita."
+        />
 
-        {/* Acordeón */}
-        <div className="space-y-3" role="list">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            const itemId = `faq-item-${index}`;
-            const answerId = `faq-answer-${index}`;
+        <div className="mx-auto mt-14 max-w-3xl lg:mt-16">
+          <dl className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === index;
+              const answerId = `faq-answer-${index}`;
+              const buttonId = `faq-button-${index}`;
 
-            return (
-              <div
-                key={index}
-                role="listitem"
-                className={`border rounded-2xl overflow-hidden transition-all duration-200 ${
-                  isOpen ? "border-rose-200 shadow-sm" : "border-gray-200"
-                }`}
-              >
-                <button
-                  id={itemId}
-                  onClick={() => toggle(index)}
-                  aria-expanded={isOpen}
-                  aria-controls={answerId}
-                  className={`w-full flex items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-200 ${
-                    isOpen ? "bg-rose-50" : "bg-white hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="font-semibold text-gray-900 text-sm sm:text-base">
-                    {faq.pregunta}
-                  </span>
-                  <ChevronDown
-                    size={20}
-                    aria-hidden="true"
-                    className={`flex-shrink-0 text-[#f06292] transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
+              return (
+                <Reveal key={faq.pregunta} delay={index * 40}>
+                  <div
+                    className={`card overflow-hidden transition-colors ${
+                      isOpen ? "border-line-strong" : ""
                     }`}
-                  />
-                </button>
+                  >
+                    <dt>
+                      <button
+                        id={buttonId}
+                        onClick={() => setOpenIndex(isOpen ? null : index)}
+                        aria-expanded={isOpen}
+                        aria-controls={answerId}
+                        className="group flex w-full items-start gap-4 p-6 text-left sm:gap-5"
+                      >
+                        <span className="display-md flex-1 text-[1.0625rem] transition-colors group-hover:text-magenta sm:text-[1.1875rem]">
+                          {faq.pregunta}
+                        </span>
 
-                <div
-                  id={answerId}
-                  role="region"
-                  aria-labelledby={itemId}
-                  className={`overflow-hidden transition-all duration-300 ${
-                    isOpen ? "max-h-96" : "max-h-0"
-                  }`}
-                >
-                  <p className="px-6 pb-5 pt-2 text-gray-600 text-sm sm:text-base leading-relaxed bg-white">
-                    {faq.respuesta}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                        <span
+                          aria-hidden="true"
+                          className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-all duration-300 ${
+                            isOpen
+                              ? "rotate-45 bg-magenta text-white"
+                              : "bg-blush text-magenta group-hover:bg-magenta group-hover:text-white"
+                          }`}
+                        >
+                          <Plus size={16} strokeWidth={2.5} />
+                        </span>
+                      </button>
+                    </dt>
 
-        {/* Pregunta adicional */}
-        <div className="mt-10 text-center p-6 bg-rose-50 rounded-2xl border border-rose-100">
-          <p className="text-gray-700 font-medium mb-3">
-            ¿Tienes una pregunta que no está aquí?
-          </p>
-          <a
-            href="tel:+584120896444"
-            className="inline-flex items-center gap-2 bg-[#f06292] text-white font-bold px-6 py-3 rounded-full hover:bg-[#ec407a] transition-colors"
-          >
-            Contáctanos directamente
-          </a>
+                    <dd
+                      id={answerId}
+                      aria-labelledby={buttonId}
+                      className={`grid transition-[grid-template-rows] duration-400 ease-out ${
+                        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="px-6 pb-6 text-[15px] leading-[1.72] text-plum-soft">
+                          {faq.respuesta}
+                        </p>
+                      </div>
+                    </dd>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </dl>
+
+          <Reveal delay={80}>
+            <div className="mt-10 flex flex-col items-center gap-5 rounded-[var(--radius-xl)] bg-blush px-8 py-9 text-center sm:flex-row sm:justify-between sm:text-left">
+              <p className="max-w-sm text-[15.5px] leading-relaxed text-plum">
+                ¿Tienes una pregunta que no está aquí? Llama al consultorio.
+              </p>
+              <a href="tel:+584120896444" className="btn btn-primary tnum shrink-0">
+                <Phone size={16} strokeWidth={2} aria-hidden="true" />
+                0412 089 6444
+              </a>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

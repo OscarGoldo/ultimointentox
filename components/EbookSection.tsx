@@ -1,76 +1,87 @@
 import Link from "next/link";
-import { BookOpen, Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import BookCover from "@/components/BookCover";
+import Reveal from "@/components/Reveal";
+import SectionHeading from "@/components/SectionHeading";
 import { EBOOK } from "@/lib/ebook";
 import { formatCurrency } from "@/lib/utils";
 
-const highlights = [
+const incluye = [
   `${EBOOK.chapters.length} capítulos de ginecología, reproducción e infertilidad`,
   "Escrito para residentes, ginecólogos y estudiantes de medicina",
-  "Acceso digital inmediato tras confirmar tu pago",
+  `${EBOOK.pages} páginas en PDF, con acceso inmediato tras confirmar el pago`,
+  "Pago por Zelle o Pago Móvil",
 ];
 
 export default function EbookSection() {
   return (
-    <section
-      id="ebook"
-      className="py-20 sm:py-28 bg-gradient-to-b from-white via-rose-50/40 to-white"
-      aria-labelledby="ebook-heading"
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          {/* Portada */}
-          <div className="flex justify-center lg:justify-start order-2 lg:order-1">
-            <div className="relative">
-              <BookCover className="rotate-[-3deg] transition-transform duration-500 hover:rotate-0" />
-              <span className="absolute -right-3 -top-3 rounded-full bg-[#f06292] px-4 py-2 text-sm font-bold text-white shadow-lg shadow-rose-300 rotate-6">
-                {formatCurrency(EBOOK.priceUsd)}
-              </span>
+    <section id="ebook" className="bg-cream py-24 lg:py-32" aria-labelledby="ebook-heading">
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+        <SectionHeading
+          label="Publicación"
+          headingId="ebook-heading"
+          title={EBOOK.title}
+          lead={EBOOK.subtitle}
+        />
+
+        <Reveal delay={60}>
+          <div className="card mt-16 overflow-hidden lg:mt-20">
+            <div className="grid items-center gap-12 p-8 sm:p-12 lg:grid-cols-[auto_1fr] lg:gap-16 lg:p-14">
+              {/* Portada */}
+              <div className="relative flex justify-center">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-6 bottom-4 top-10 rounded-full bg-blush blur-2xl"
+                />
+                <BookCover className="relative rotate-[-3deg] transition-transform duration-500 hover:rotate-0" />
+              </div>
+
+              {/* Detalle */}
+              <div>
+                <p className="text-[16.5px] leading-[1.78] text-plum-soft">
+                  Un manual de consulta rápida escrito por la Dra. Hilda Mary Díaz y
+                  colaboradores. Fisiología, diagnóstico y manejo en reproducción e
+                  infertilidad, ordenados para resolver durante la consulta.
+                </p>
+
+                <ul className="mt-8 space-y-3.5">
+                  {incluye.map((linea) => (
+                    <li key={linea} className="flex items-start gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-blush text-magenta"
+                      >
+                        <Check size={13} strokeWidth={3} />
+                      </span>
+                      <span className="text-[14.5px] leading-snug text-plum-soft">
+                        {linea}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-line pt-8">
+                  <div>
+                    <p className="eyebrow text-mauve">Precio</p>
+                    <p className="display tnum mt-1.5 text-[2.5rem] leading-none text-magenta">
+                      {formatCurrency(EBOOK.priceUsd)}
+                    </p>
+                  </div>
+
+                  <Link href="/ebook" className="btn btn-primary group ml-auto">
+                    Obtener el manual
+                    <ArrowRight
+                      size={17}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                      className="transition-transform duration-200 group-hover:translate-x-0.5"
+                    />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Texto */}
-          <div className="order-1 lg:order-2">
-            <p className="inline-flex items-center gap-2 text-sm font-semibold text-[#f06292] uppercase tracking-widest mb-3">
-              <BookOpen size={16} />
-              Nuevo · Ebook
-            </p>
-            <h2
-              id="ebook-heading"
-              className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
-            >
-              {EBOOK.title}
-            </h2>
-            <p className="text-gray-500 leading-relaxed mb-6">
-              {EBOOK.subtitle} Un manual de consulta rápida y confiable, fruto de
-              la experiencia clínica de la Dra. Hilda Mary Díaz y colaboradores.
-            </p>
-
-            <ul className="space-y-3 mb-8">
-              {highlights.map((h) => (
-                <li key={h} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-rose-100">
-                    <Check size={13} className="text-[#f06292]" />
-                  </span>
-                  <span className="text-sm text-gray-600">{h}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/ebook"
-                className="inline-flex items-center gap-2 bg-[#f06292] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] transition-all duration-200"
-              >
-                Obtener el manual
-                <ArrowRight size={18} />
-              </Link>
-              <span className="text-sm text-gray-400">
-                Pago por Zelle o Pago Móvil
-              </span>
-            </div>
-          </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

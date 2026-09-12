@@ -2,82 +2,122 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Phone, MapPin, ArrowDown } from "lucide-react";
+import { FOTOS } from "@/lib/fotos";
+
+const credenciales = [
+  { cifra: "20+", detalle: "años de ejercicio" },
+  { cifra: "UDO", detalle: "Médico cirujano" },
+  { cifra: "UNIFERTES", detalle: "Subespecialidad" },
+];
 
 export default function Hero() {
+  const retrato = FOTOS.dePie;
+
   return (
     <section
       id="inicio"
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+      className="relative overflow-hidden pt-[104px] pb-20 sm:pt-[120px] lg:pt-[168px] lg:pb-28"
       aria-labelledby="hero-heading"
     >
-      {/* Fondo decorativo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-sky-50 -z-10" aria-hidden="true" />
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-rose-100/40 blur-3xl -z-10" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sky-100/40 blur-3xl -z-10" aria-hidden="true" />
+      {/* Veladuras cálidas de fondo */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-24 h-[560px] w-[560px] rounded-full bg-blush opacity-70 blur-[100px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-52 top-72 h-[420px] w-[420px] rounded-full bg-sky/25 blur-[110px]"
+      />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-6 w-full">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-8">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
           {/* Texto */}
-          <div className="order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 text-[#f06292] text-sm font-semibold px-4 py-2 rounded-full mb-4">
-              <span className="w-2 h-2 bg-[#f06292] rounded-full animate-pulse" aria-hidden="true" />
-              Consultando en Clínica Tierra Santa, Maturín
-            </div>
-
+          <div>
             <h1
               id="hero-heading"
-              className="text-4xl sm:text-5xl lg:text-5xl font-bold text-gray-900 leading-tight mb-3"
+              className="display text-[2.625rem] sm:text-[3.5rem] lg:text-[4.125rem]"
             >
-              Ginecóloga, Obstetra y{" "}
-              <span className="text-[#f06292]">Especialista en Fertilidad</span>{" "}
-              en Maturín
+              Cuidar de ti en cada{" "}
+              <em className="not-italic text-magenta">etapa de tu vida</em>
             </h1>
 
-            <p className="text-base lg:text-lg text-gray-600 leading-relaxed mb-6 max-w-lg">
-              Más de 20 años acompañando mujeres en <strong>Maturín, Monagas</strong> y el oriente venezolano.
-              Atención en fertilidad, obstetricia y ginecología general en Clínica Tierra Santa.
+            <p className="mt-7 max-w-xl text-[17.5px] leading-[1.75] text-plum-soft">
+              Soy la <strong className="font-semibold text-plum">Dra. Hilda Mary Díaz García</strong>,
+              ginecóloga, obstetra y especialista en fertilidad. Más de 20 años
+              acompañando mujeres en Maturín, Monagas y el oriente venezolano.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 href="https://ozmedical.app/reservar/hildadiaz"
-                aria-label="Ver disponibilidad de citas con la Dra. Hilda Díaz"
-                className="inline-flex items-center justify-center gap-2 bg-[#f06292] text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] hover:shadow-rose-300 transition-all duration-200 group"
+                aria-label="Agendar una cita con la Dra. Hilda Díaz"
+                className="btn btn-primary w-full sm:w-auto"
               >
-                <Phone size={18} aria-hidden="true" className="group-hover:scale-110 transition-transform" />
-                Ver disponibilidad
+                <Phone size={17} strokeWidth={2} aria-hidden="true" />
+                Agendar mi cita
               </Link>
+
               <a
                 href="#servicios"
                 onClick={(e) => {
                   e.preventDefault();
                   document.querySelector("#servicios")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="inline-flex items-center justify-center gap-2 border-2 border-[#f06292] text-[#f06292] font-bold text-base px-8 py-4 rounded-full hover:bg-rose-50 transition-all duration-200"
+                className="btn btn-outline group w-full sm:w-auto"
               >
-                Ver Servicios
+                Ver servicios
+                <ArrowDown
+                  size={16}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-y-0.5"
+                />
               </a>
             </div>
+
+            {/* Credenciales */}
+            <dl className="mt-12 flex flex-wrap items-start gap-x-10 gap-y-6">
+              {credenciales.map(({ cifra, detalle }) => (
+                <div key={cifra}>
+                  <dt className="display-md tnum text-[1.625rem] text-magenta">{cifra}</dt>
+                  <dd className="mt-1 text-[13px] text-mauve">{detalle}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          {/* Imagen */}
-          <div className="order-1 lg:order-2 flex justify-center">
-            <div className="relative">
-              <div
-                className="absolute inset-0 scale-110 rounded-[2rem] bg-gradient-to-br from-rose-200 to-sky-200 rotate-3"
-                aria-hidden="true"
+          {/* Retrato en arco, en su proporción real (828×1013): sin recorte */}
+          <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+            <div
+              aria-hidden="true"
+              className="arch absolute -inset-3 border border-line-strong sm:-inset-4"
+            />
+
+            <div className="arch relative shadow-lift">
+              <Image
+                src={retrato.src}
+                alt={retrato.alt}
+                width={retrato.width}
+                height={retrato.height}
+                priority
+                sizes="(max-width: 1024px) 90vw, 520px"
+                className="h-auto w-full"
               />
-              <div className="relative w-[260px] h-[360px] sm:w-[320px] sm:h-[440px] lg:w-[340px] lg:h-[460px] rounded-[2rem] overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/foto1.jpg"
-                  alt="Dra. Hilda Mary Díaz García - Ginecóloga Obstetra en Maturín"
-                  fill
-                  className="object-cover object-top"
-                  priority
-                  sizes="(max-width: 640px) 300px, 380px"
-                />
-              </div>
+            </div>
+
+            {/* Tarjeta de ubicación */}
+            <div className="card absolute -bottom-5 -left-2 flex items-center gap-3 px-5 py-4 sm:-left-6">
+              <span
+                aria-hidden="true"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blush text-magenta"
+              >
+                <MapPin size={17} strokeWidth={2} />
+              </span>
+              <span className="text-[13px] leading-snug">
+                <span className="block font-semibold text-plum">Clínica Tierra Santa</span>
+                <span className="block text-mauve">Piso 3, Consultorio 3 · Maturín</span>
+              </span>
             </div>
           </div>
         </div>

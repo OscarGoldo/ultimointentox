@@ -1,37 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, Check } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import SectionHeading from "@/components/SectionHeading";
 
 const contactInfo = [
   {
     icon: Phone,
     label: "Teléfono",
-    value: "0412-089-6444",
+    value: "0412 089 6444",
     href: "tel:+584120896444",
-    color: "rose",
   },
   {
     icon: Mail,
-    label: "Correo Electrónico",
+    label: "Correo electrónico",
     value: "dochildadiaz@gmail.com",
     href: "mailto:dochildadiaz@gmail.com",
-    color: "sky",
   },
   {
     icon: MapPin,
     label: "Dirección",
     value: "Clínica Tierra Santa, Piso 3, Consultorio 3 — Maturín, Venezuela",
     href: "https://maps.google.com/?q=Clinica+Tierra+Santa+Maturin+Venezuela",
-    color: "rose",
   },
   {
     icon: Clock,
-    label: "Horario de Atención",
-    value: "Lunes a Viernes: 8:00 AM – 5:00 PM",
+    label: "Horario de atención",
+    value: "Lunes a viernes, 8:00 AM – 5:00 PM",
     href: null,
-    color: "sky",
   },
+];
+
+const motivos = [
+  { value: "control-prenatal", label: "Control Prenatal" },
+  { value: "ginecologia", label: "Ginecología General" },
+  { value: "fertilidad", label: "Fertilidad / Reproducción" },
+  { value: "planificacion", label: "Planificación Familiar" },
+  { value: "menopausia", label: "Menopausia y Climaterio" },
+  { value: "otro", label: "Otro" },
 ];
 
 interface FormData {
@@ -105,105 +112,83 @@ export default function Contact() {
   };
 
   return (
-    <section
-      id="contacto"
-      className="py-20 sm:py-28 bg-white"
-      aria-labelledby="contact-heading"
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Encabezado */}
-        <div className="text-center mb-16">
-          <p className="text-sm font-semibold text-[#f06292] uppercase tracking-widest mb-2">
-            Agenda tu cita
-          </p>
-          <h2
-            id="contact-heading"
-            className="text-3xl sm:text-4xl font-bold text-gray-900"
-          >
-            Contacto y Ubicación
-          </h2>
-          <div className="mt-3 mx-auto w-16 h-1 bg-[#f06292] rounded-full" aria-hidden="true" />
-        </div>
+    <section id="contacto" className="bg-blush py-24 lg:py-32" aria-labelledby="contact-heading">
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+        <SectionHeading
+          label="Contacto"
+          headingId="contact-heading"
+          title="Agenda tu consulta"
+          lead="Escríbenos y te respondemos dentro de las próximas 24 horas hábiles."
+        />
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Info de contacto + Mapa */}
-          <div>
-            <div className="space-y-4 mb-8">
-              {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
-                <div
-                  key={label}
-                  className={`flex gap-4 p-4 rounded-xl border transition-colors ${
-                    color === "rose" ? "border-rose-100 bg-rose-50/50" : "border-sky-100 bg-sky-50/50"
-                  }`}
-                >
-                  <div
-                    className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
-                      color === "rose" ? "bg-rose-100" : "bg-sky-100"
-                    }`}
-                    aria-hidden="true"
-                  >
-                    <Icon
-                      size={18}
-                      className={color === "rose" ? "text-[#f06292]" : "text-[#0288d1]"}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      {label}
-                    </p>
-                    {href ? (
-                      <a
-                        href={href}
-                        target={href.startsWith("http") ? "_blank" : undefined}
-                        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="text-gray-800 font-medium hover:text-[#f06292] transition-colors text-sm"
-                      >
-                        {value}
-                      </a>
-                    ) : (
-                      <p className="text-gray-800 font-medium text-sm">{value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="mt-16 grid gap-8 lg:mt-20 lg:grid-cols-[1fr_1.15fr]">
+          {/* Datos y mapa */}
+          <div className="space-y-6">
+            <Reveal>
+              <ul className="space-y-4">
+                {contactInfo.map(({ icon: Icon, label, value, href }) => (
+                  <li key={label} className="card card-hover flex gap-4 p-5">
+                    <span
+                      aria-hidden="true"
+                      className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blush text-magenta"
+                    >
+                      <Icon size={18} strokeWidth={2} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="eyebrow block text-mauve">{label}</span>
+                      {href ? (
+                        <a
+                          href={href}
+                          target={href.startsWith("http") ? "_blank" : undefined}
+                          rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="tnum mt-1.5 block break-words text-[14.5px] font-medium text-plum underline-offset-4 transition-colors hover:text-magenta hover:underline"
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <span className="tnum mt-1.5 block text-[14.5px] font-medium text-plum">
+                          {value}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
 
-            {/* Google Maps embed placeholder */}
-            <div
-              className="rounded-2xl overflow-hidden shadow-md border border-gray-100"
-              aria-label="Mapa de ubicación - Clínica Tierra Santa, Maturín"
-            >
-              <iframe
-                src="https://maps.google.com/maps?q=Av+Fuerzas+Armadas%2C+Matur%C3%ADn+6201%2C+Monagas%2C+Venezuela&output=embed&hl=es&z=16"
-                width="100%"
-                height="260"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación de la Dra. Hilda Díaz en Maturín"
-              />
-            </div>
+            <Reveal delay={80}>
+              <div className="card overflow-hidden p-0">
+                <iframe
+                  src="https://maps.google.com/maps?q=Av+Fuerzas+Armadas%2C+Matur%C3%ADn+6201%2C+Monagas%2C+Venezuela&output=embed&hl=es&z=16"
+                  width="100%"
+                  height="280"
+                  style={{ border: 0, display: "block" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación del consultorio de la Dra. Hilda Díaz en Maturín"
+                  className="map-tint"
+                />
+              </div>
+            </Reveal>
           </div>
 
           {/* Formulario */}
-          <div>
+          <Reveal delay={60}>
             {enviado ? (
               <div
                 role="alert"
-                className="h-full flex flex-col items-center justify-center text-center p-10 bg-rose-50 rounded-2xl border border-rose-100"
+                className="card flex h-full flex-col items-center justify-center p-10 text-center sm:p-14"
               >
-                <CheckCircle size={56} className="text-[#f06292] mb-4" aria-hidden="true" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  ¡Mensaje Enviado!
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Gracias por contactarnos. La Dra. Hilda Díaz se comunicará contigo a la brevedad posible.
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-magenta text-white">
+                  <Check size={26} strokeWidth={2.5} aria-hidden="true" />
+                </span>
+                <h3 className="display mt-7 text-[2rem]">¡Mensaje enviado!</h3>
+                <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-plum-soft">
+                  Gracias por escribir. La Dra. Hilda Díaz se comunicará contigo a la
+                  brevedad posible.
                 </p>
-                <button
-                  onClick={() => setEnviado(false)}
-                  className="bg-[#f06292] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#ec407a] transition-colors"
-                >
+                <button onClick={() => setEnviado(false)} className="btn btn-outline mt-8">
                   Enviar otro mensaje
                 </button>
               </div>
@@ -212,152 +197,143 @@ export default function Contact() {
                 onSubmit={handleSubmit}
                 noValidate
                 aria-label="Formulario de contacto"
-                className="bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100"
+                className="card p-7 sm:p-10"
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-6">
-                  Solicitar Información
-                </h3>
+                <h3 className="display-md text-[1.5rem]">Solicitar información</h3>
+                <p className="mt-2 text-[14px] text-mauve">
+                  Los campos con <span className="text-magenta">*</span> son obligatorios.
+                </p>
 
-                {/* Nombre */}
-                <div className="mb-5">
-                  <label htmlFor="nombre" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Nombre completo <span aria-hidden="true" className="text-[#f06292]">*</span>
-                  </label>
-                  <input
-                    id="nombre"
-                    name="nombre"
-                    type="text"
-                    value={form.nombre}
-                    onChange={handleChange}
-                    autoComplete="name"
-                    aria-required="true"
-                    aria-describedby={errors.nombre ? "nombre-error" : undefined}
-                    aria-invalid={!!errors.nombre}
-                    placeholder="Tu nombre completo"
-                    className={`w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-rose-300 ${
-                      errors.nombre ? "border-red-400" : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  />
-                  {errors.nombre && (
-                    <p id="nombre-error" role="alert" className="mt-1 text-xs text-red-600">
-                      {errors.nombre}
-                    </p>
-                  )}
-                </div>
-
-                {/* Teléfono y email */}
-                <div className="grid sm:grid-cols-2 gap-5 mb-5">
+                <div className="mt-8 space-y-6">
                   <div>
-                    <label htmlFor="telefono" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Teléfono <span aria-hidden="true" className="text-[#f06292]">*</span>
+                    <label htmlFor="nombre" className="mb-2 block text-[13.5px] font-semibold text-plum">
+                      Nombre completo <span className="text-magenta">*</span>
                     </label>
                     <input
-                      id="telefono"
-                      name="telefono"
-                      type="tel"
-                      value={form.telefono}
+                      id="nombre"
+                      name="nombre"
+                      type="text"
+                      value={form.nombre}
                       onChange={handleChange}
-                      autoComplete="tel"
+                      autoComplete="name"
                       aria-required="true"
-                      aria-describedby={errors.telefono ? "telefono-error" : undefined}
-                      aria-invalid={!!errors.telefono}
-                      placeholder="0412-0000000"
-                      className={`w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-rose-300 ${
-                        errors.telefono ? "border-red-400" : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      aria-describedby={errors.nombre ? "nombre-error" : undefined}
+                      aria-invalid={!!errors.nombre}
+                      placeholder="Tu nombre completo"
+                      className="field"
                     />
-                    {errors.telefono && (
-                      <p id="telefono-error" role="alert" className="mt-1 text-xs text-red-600">
-                        {errors.telefono}
+                    {errors.nombre && (
+                      <p id="nombre-error" role="alert" className="mt-2 text-[12.5px] text-[#c0392b]">
+                        {errors.nombre}
                       </p>
                     )}
                   </div>
+
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="telefono" className="mb-2 block text-[13.5px] font-semibold text-plum">
+                        Teléfono <span className="text-magenta">*</span>
+                      </label>
+                      <input
+                        id="telefono"
+                        name="telefono"
+                        type="tel"
+                        value={form.telefono}
+                        onChange={handleChange}
+                        autoComplete="tel"
+                        aria-required="true"
+                        aria-describedby={errors.telefono ? "telefono-error" : undefined}
+                        aria-invalid={!!errors.telefono}
+                        placeholder="0412 000 0000"
+                        className="field tnum"
+                      />
+                      {errors.telefono && (
+                        <p id="telefono-error" role="alert" className="mt-2 text-[12.5px] text-[#c0392b]">
+                          {errors.telefono}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="mb-2 block text-[13.5px] font-semibold text-plum">
+                        Correo electrónico
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        autoComplete="email"
+                        aria-describedby={errors.email ? "email-error" : undefined}
+                        aria-invalid={!!errors.email}
+                        placeholder="tu@correo.com"
+                        className="field"
+                      />
+                      {errors.email && (
+                        <p id="email-error" role="alert" className="mt-2 text-[12.5px] text-[#c0392b]">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Correo electrónico
+                    <label htmlFor="motivo" className="mb-2 block text-[13.5px] font-semibold text-plum">
+                      Motivo de consulta <span className="text-magenta">*</span>
                     </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={form.email}
+                    <select
+                      id="motivo"
+                      name="motivo"
+                      value={form.motivo}
                       onChange={handleChange}
-                      autoComplete="email"
-                      aria-describedby={errors.email ? "email-error" : undefined}
-                      aria-invalid={!!errors.email}
-                      placeholder="tu@correo.com"
-                      className={`w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-rose-300 ${
-                        errors.email ? "border-red-400" : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    />
-                    {errors.email && (
-                      <p id="email-error" role="alert" className="mt-1 text-xs text-red-600">
-                        {errors.email}
+                      aria-required="true"
+                      aria-describedby={errors.motivo ? "motivo-error" : undefined}
+                      aria-invalid={!!errors.motivo}
+                      className="field cursor-pointer"
+                    >
+                      <option value="">Selecciona una opción</option>
+                      {motivos.map((m) => (
+                        <option key={m.value} value={m.value}>
+                          {m.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.motivo && (
+                      <p id="motivo-error" role="alert" className="mt-2 text-[12.5px] text-[#c0392b]">
+                        {errors.motivo}
                       </p>
                     )}
                   </div>
-                </div>
 
-                {/* Motivo */}
-                <div className="mb-5">
-                  <label htmlFor="motivo" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Motivo de consulta <span aria-hidden="true" className="text-[#f06292]">*</span>
-                  </label>
-                  <select
-                    id="motivo"
-                    name="motivo"
-                    value={form.motivo}
-                    onChange={handleChange}
-                    aria-required="true"
-                    aria-describedby={errors.motivo ? "motivo-error" : undefined}
-                    aria-invalid={!!errors.motivo}
-                    className={`w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-rose-300 ${
-                      errors.motivo ? "border-red-400" : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <option value="">Selecciona una opción</option>
-                    <option value="control-prenatal">Control Prenatal</option>
-                    <option value="ginecologia">Ginecología General</option>
-                    <option value="fertilidad">Fertilidad / Reproducción</option>
-                    <option value="planificacion">Planificación Familiar</option>
-                    <option value="menopausia">Menopausia y Climaterio</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                  {errors.motivo && (
-                    <p id="motivo-error" role="alert" className="mt-1 text-xs text-red-600">
-                      {errors.motivo}
-                    </p>
-                  )}
-                </div>
-
-                {/* Mensaje */}
-                <div className="mb-6">
-                  <label htmlFor="mensaje" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Mensaje adicional
-                  </label>
-                  <textarea
-                    id="mensaje"
-                    name="mensaje"
-                    value={form.mensaje}
-                    onChange={handleChange}
-                    rows={4}
-                    placeholder="Cuéntanos brevemente lo que necesitas..."
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-rose-300 hover:border-gray-300 resize-none"
-                  />
+                  <div>
+                    <label htmlFor="mensaje" className="mb-2 block text-[13.5px] font-semibold text-plum">
+                      Mensaje adicional
+                    </label>
+                    <textarea
+                      id="mensaje"
+                      name="mensaje"
+                      value={form.mensaje}
+                      onChange={handleChange}
+                      rows={4}
+                      placeholder="Cuéntanos brevemente lo que necesitas…"
+                      className="field resize-none"
+                    />
+                  </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={enviando}
                   aria-disabled={enviando}
-                  className="w-full flex items-center justify-center gap-2 bg-[#f06292] text-white font-bold py-4 rounded-full shadow-lg shadow-rose-200 hover:bg-[#ec407a] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="btn btn-primary mt-8 w-full disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <Send size={17} aria-hidden="true" />
-                  {enviando ? "Enviando..." : "Enviar Solicitud"}
+                  <Send size={16} strokeWidth={2} aria-hidden="true" />
+                  {enviando ? "Enviando…" : "Enviar solicitud"}
                 </button>
               </form>
             )}
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
