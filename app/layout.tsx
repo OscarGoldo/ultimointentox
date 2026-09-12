@@ -53,6 +53,12 @@ export const metadata: Metadata = {
     description:
       "Más de 20 años en salud femenina en Maturín, Monagas. Clínica Tierra Santa.",
   },
+  /* Código que entrega Google Search Console al dar de alta la propiedad.
+     Se define como variable de entorno para no tocar código al renovarlo;
+     si no existe, Next simplemente no imprime la etiqueta. */
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export default function RootLayout({
