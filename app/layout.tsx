@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree, Cormorant_Garamond } from "next/font/google";
 import { Toaster } from "sonner";
+import GoogleTag from "@/components/GoogleTag";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -70,6 +71,7 @@ export default function RootLayout({
     <html lang="es" className={`${figtree.variable} ${cormorant.variable}`}>
       <body className="antialiased">
         {children}
+        <GoogleTag />
         <Toaster
           position="top-right"
           toastOptions={{
