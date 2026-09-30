@@ -1,3 +1,5 @@
+import { FAQS_PORTADA } from "@/lib/faqs";
+
 const SITE = "https://drahildadiaz.com";
 
 /** Ficha de Google Maps del consultorio (CID de su Perfil de Empresa). */
@@ -106,6 +108,21 @@ const profesional = {
   sameAs: [MAPS_URL, "https://www.instagram.com/doc.hildadiaz/"],
 };
 
+/**
+ * FAQPage con las mismas preguntas que la paciente ve en la portada. Es lo que
+ * permite a Google desplegarlas bajo el resultado de búsqueda.
+ */
+const preguntas = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${SITE}/#faq`,
+  mainEntity: FAQS_PORTADA.map(({ pregunta, respuesta }) => ({
+    "@type": "Question",
+    name: pregunta,
+    acceptedAnswer: { "@type": "Answer", text: respuesta },
+  })),
+};
+
 export default function StructuredData() {
   return (
     <>
@@ -116,6 +133,10 @@ export default function StructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profesional) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(preguntas) }}
       />
     </>
   );

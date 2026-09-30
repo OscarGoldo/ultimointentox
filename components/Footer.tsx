@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Instagram, ArrowRight } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 
-const especialidades = [
-  "Control Prenatal",
-  "Ginecología General",
-  "Fertilidad y Reproducción",
-  "Planificación Familiar",
-  "Colposcopia y PAP",
-  "Menopausia y Climaterio",
+const especialidades: { label: string; href?: string }[] = [
+  { label: "Control Prenatal", href: "/control-prenatal-en-maturin" },
+  { label: "Ginecología General", href: "/ginecologo-en-maturin" },
+  { label: "Fertilidad y Reproducción", href: "/fertilidad-en-maturin" },
+  { label: "Planificación Familiar" },
+  { label: "Colposcopia y PAP" },
+  { label: "Menopausia y Climaterio" },
 ];
 
 export default function Footer() {
@@ -75,8 +75,16 @@ export default function Footer() {
         <nav aria-label="Especialidades" className="lg:col-span-4">
           <h3 className="eyebrow text-on-dark">Especialidades</h3>
           <ul className="mt-5 space-y-2.5 text-[13.5px]">
-            {especialidades.map((s) => (
-              <li key={s}>{s}</li>
+            {especialidades.map(({ label, href }) => (
+              <li key={label}>
+                {href ? (
+                  <Link href={href} className="transition-colors hover:text-white">
+                    {label}
+                  </Link>
+                ) : (
+                  label
+                )}
+              </li>
             ))}
           </ul>
         </nav>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 
@@ -16,6 +17,10 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  /* Las secciones del menú viven en la portada: fuera de ella el enlace tiene
+     que navegar a /#seccion en vez de intentar hacer scroll a algo que no existe. */
+  const enPortada = usePathname() === "/";
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 24);
@@ -32,8 +37,9 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const go = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
     setIsMenuOpen(false);
+    if (!enPortada) return;
+    e.preventDefault();
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -77,7 +83,7 @@ export default function Header() {
       >
         <div className="mx-auto flex h-[76px] max-w-[1200px] items-center justify-between gap-8 px-5 sm:px-8">
           <a
-            href="#inicio"
+            href={enPortada ? "#inicio" : "/"}
             onClick={(e) => go(e, "#inicio")}
             aria-label="Ir al inicio — Dra. Hilda Mary Díaz García"
             className="rounded-lg"
@@ -89,7 +95,7 @@ export default function Header() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={enPortada ? link.href : "/" + link.href}
                 onClick={(e) => go(e, link.href)}
                 className="group relative py-1 text-[14.5px] font-medium text-plum-soft transition-colors duration-200 hover:text-magenta"
               >
@@ -137,7 +143,7 @@ export default function Header() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={enPortada ? link.href : "/" + link.href}
                 onClick={(e) => go(e, link.href)}
                 className="flex items-center justify-between border-b border-line py-5 transition-colors hover:text-magenta"
               >

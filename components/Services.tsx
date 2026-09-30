@@ -94,6 +94,24 @@ export default function Services() {
           ))}
         </ul>
 
+        <Reveal delay={60}>
+          <p className="mt-12 text-center text-[15px] leading-relaxed text-plum-soft">
+            Más detalle sobre cada consulta:{" "}
+            <Link href="/ginecologo-en-maturin" className="font-semibold text-magenta underline-offset-4 hover:underline">
+              ginecólogo en Maturín
+            </Link>
+            ,{" "}
+            <Link href="/control-prenatal-en-maturin" className="font-semibold text-magenta underline-offset-4 hover:underline">
+              control prenatal
+            </Link>{" "}
+            y{" "}
+            <Link href="/fertilidad-en-maturin" className="font-semibold text-magenta underline-offset-4 hover:underline">
+              tratamiento de fertilidad
+            </Link>
+            .
+          </p>
+        </Reveal>
+
         <Reveal delay={80}>
           <div className="mt-14 overflow-hidden rounded-[var(--radius-xl)] bg-magenta px-8 py-10 sm:px-12 sm:py-12">
             <div className="flex flex-col items-center gap-7 text-center lg:flex-row lg:justify-between lg:text-left">
