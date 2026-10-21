@@ -1,18 +1,34 @@
 import Link from "next/link";
-import { Phone, MapPin, Clock, ArrowRight, ChevronRight, Check } from "lucide-react";
-import Reveal from "@/components/Reveal";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Phone, ArrowRight, ChevronRight } from "lucide-react";
+import Header from "@/components/portada/Header";
+import Footer from "@/components/portada/Footer";
+import { CENTRO, Corona, CORONA_EXTERIOR, CORONA_INTERIOR } from "@/components/portada/corona";
+import { AGENDAR_URL, MAPS_URL, TELEFONO } from "@/components/portada/datos";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { getPaginaLocal, type PaginaLocal } from "@/lib/paginas-locales";
+import "@/app/portada.css";
 
 const SITE = "https://drahildadiaz.com";
-const RESERVAR = "https://ozmedical.app/reservar/hildadiaz";
+
+/** Que el teléfono no se parta en dos líneas por el guion. */
+function telefonoSinCortes(texto: string) {
+  return texto.split(TELEFONO.visible).flatMap((parte, i) =>
+    i === 0
+      ? [parte]
+      : [
+          <span key={i} className="whitespace-nowrap">
+            {TELEFONO.visible}
+          </span>,
+          parte,
+        ]
+  );
+}
 
 /**
  * Página de contenido local. La portada existe para presentar el consultorio;
  * estas existen para responder la búsqueda concreta que trae a la paciente
- * desde Google ("ginecólogo en Maturín") y llevarla a agendar.
+ * desde Google ("ginecólogo en Maturín") y llevarla a agendar. Visten el
+ * mismo diseño que la portada (.rd) para que pasar de una a otra no salte.
  */
 export default function PaginaLocalView({ pagina }: { pagina: PaginaLocal }) {
   const url = `${SITE}/${pagina.slug}`;
@@ -52,7 +68,7 @@ export default function PaginaLocalView({ pagina }: { pagina: PaginaLocal }) {
   };
 
   return (
-    <>
+    <div className="rd">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -61,11 +77,17 @@ export default function PaginaLocalView({ pagina }: { pagina: PaginaLocal }) {
 
       <main id="main-content">
         {/* Encabezado */}
-        <section className="bg-cream pb-16 pt-32 lg:pb-20 lg:pt-44">
-          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-            <Reveal>
-              <nav aria-label="Ruta de navegación" className="mb-8">
-                <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-mauve">
+        <section
+          aria-labelledby="rd-local-title"
+          className="pb-20 pt-[112px] lg:pb-28 lg:pt-[152px]"
+        >
+          <div className="mx-auto grid max-w-[1320px] gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:items-end lg:gap-6">
+            <div
+              className="rd-fade lg:col-span-7"
+              style={{ "--delay": "60ms" } as React.CSSProperties}
+            >
+              <nav aria-label="Ruta de navegación">
+                <ol className="flex flex-wrap items-center gap-1.5 text-[14px] text-ink-soft">
                   <li>
                     <Link href="/" className="transition-colors hover:text-magenta">
                       Inicio
@@ -74,203 +96,199 @@ export default function PaginaLocalView({ pagina }: { pagina: PaginaLocal }) {
                   <li aria-hidden="true" className="flex items-center">
                     <ChevronRight size={14} strokeWidth={2} />
                   </li>
-                  <li aria-current="page" className="text-plum-soft">
+                  <li aria-current="page" className="font-medium text-wine">
                     {pagina.etiqueta}
                   </li>
                 </ol>
               </nav>
 
-              <span className="eyebrow inline-flex rounded-full bg-blush px-4 py-2 text-magenta-deep">
-                {pagina.etiqueta}
-              </span>
-
-              <h1 className="display mt-6 max-w-4xl text-[2.125rem] sm:text-[2.75rem] lg:text-[3.25rem]">
+              <h1
+                id="rd-local-title"
+                className="rd-display mt-8 text-balance text-[clamp(2.75rem,5.4vw,5.25rem)] leading-[1]"
+              >
                 {pagina.titulo}
               </h1>
 
-              <div className="mt-6 max-w-2xl space-y-4">
+              <div className="mt-8 max-w-[38rem] space-y-4">
                 {pagina.entrada.map((parrafo) => (
-                  <p key={parrafo} className="text-[17px] leading-[1.75] text-plum-soft">
-                    {parrafo}
+                  <p key={parrafo} className="rd-lead">
+                    {telefonoSinCortes(parrafo)}
                   </p>
                 ))}
               </div>
 
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href={RESERVAR} className="btn btn-primary group">
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a href={AGENDAR_URL} className="rd-btn rd-btn-primary">
                   Agendar cita
-                  <ArrowRight
-                    size={17}
-                    strokeWidth={2}
-                    aria-hidden="true"
-                    className="transition-transform duration-200 group-hover:translate-x-0.5"
-                  />
-                </Link>
-                <a href="tel:+584120896444" className="btn btn-outline tnum">
-                  <Phone size={16} strokeWidth={2} aria-hidden="true" />
-                  0412 089 6444
+                </a>
+                <a href={TELEFONO.href} className="rd-btn rd-btn-ghost tnum">
+                  <Phone size={17} strokeWidth={2} aria-hidden="true" />
+                  {TELEFONO.visible}
                 </a>
               </div>
+            </div>
 
-              <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
-                <div className="card flex gap-3 p-5">
-                  <MapPin
-                    size={18}
-                    strokeWidth={1.9}
-                    aria-hidden="true"
-                    className="mt-0.5 shrink-0 text-magenta"
-                  />
+            <aside
+              aria-label="Consultorio y horario"
+              className="rd-fade lg:col-span-4 lg:col-start-9"
+              style={{ "--delay": "220ms" } as React.CSSProperties}
+            >
+              <div className="relative overflow-hidden rounded-[28px] bg-wine p-8 text-milk sm:p-10 lg:rounded-[36px]">
+                {/* Eco del óvulo de la portada, quieto */}
+                <svg
+                  viewBox="0 0 600 600"
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-[150px] -top-[150px] w-[340px] opacity-35"
+                >
+                  <Corona petalos={CORONA_EXTERIOR} />
+                  <Corona petalos={CORONA_INTERIOR} />
+                  <circle cx={CENTRO} cy={CENTRO} r="214" fill="none" stroke="#c2185b" strokeWidth="2" />
+                </svg>
+
+                <dl className="relative grid gap-6 text-[15.5px] leading-relaxed">
                   <div>
-                    <dt className="text-[12.5px] font-semibold uppercase tracking-wide text-mauve">
-                      Consultorio
-                    </dt>
-                    <dd className="mt-1 text-[14.5px] leading-snug text-plum-soft">
+                    <dt className="font-semibold">Consultorio</dt>
+                    <dd className="mt-1 text-on-wine-soft">
                       Clínica Tierra Santa, piso 3, consultorio 3 — Maturín, Monagas
                     </dd>
                   </div>
-                </div>
-
-                <div className="card flex gap-3 p-5">
-                  <Clock
-                    size={18}
-                    strokeWidth={1.9}
-                    aria-hidden="true"
-                    className="mt-0.5 shrink-0 text-magenta"
-                  />
-                  <div>
-                    <dt className="text-[12.5px] font-semibold uppercase tracking-wide text-mauve">
-                      Horario
-                    </dt>
-                    <dd className="mt-1 text-[14.5px] leading-snug text-plum-soft">
+                  <div className="border-t border-white/10 pt-6">
+                    <dt className="font-semibold">Horario</dt>
+                    <dd className="mt-1 text-on-wine-soft">
                       Lunes a viernes, 8:00 AM – 5:00 PM
                     </dd>
                   </div>
-                </div>
-              </dl>
-            </Reveal>
+                </dl>
+
+                <a
+                  href={MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rd-btn rd-btn-ghost-light relative mt-8 w-full"
+                >
+                  Abrir en Google Maps
+                </a>
+              </div>
+            </aside>
           </div>
         </section>
 
         {/* Contenido */}
-        <section className="bg-blush py-20 lg:py-24">
-          <div className="mx-auto max-w-[1200px] space-y-16 px-5 sm:px-8 lg:space-y-20">
-            {pagina.secciones.map((seccion) => (
-              <Reveal key={seccion.titulo}>
-                <article className="max-w-3xl">
-                  <h2 className="display text-[1.75rem] sm:text-[2.125rem]">
-                    {seccion.titulo}
-                  </h2>
+        <div className="mx-auto max-w-[1320px] px-5 sm:px-8">
+          {pagina.secciones.map((seccion) => (
+            <article
+              key={seccion.titulo}
+              className="grid gap-8 border-t border-wine/12 py-16 lg:grid-cols-12 lg:gap-6 lg:py-24"
+            >
+              <div className="lg:col-span-4">
+                <h2 className="rd-title text-[clamp(2.1rem,3.4vw,3.25rem)] lg:sticky lg:top-[104px]">
+                  {seccion.titulo}
+                </h2>
+              </div>
 
-                  {seccion.parrafos && (
-                    <div className="mt-5 space-y-4">
-                      {seccion.parrafos.map((parrafo) => (
-                        <p
-                          key={parrafo}
-                          className="text-[16px] leading-[1.78] text-plum-soft"
-                        >
-                          {parrafo}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </article>
+              <div className="lg:col-span-7 lg:col-start-6">
+                {seccion.parrafos && (
+                  <div className="max-w-[40rem] space-y-5">
+                    {seccion.parrafos.map((parrafo) => (
+                      <p
+                        key={parrafo}
+                        className="text-[1.0625rem] leading-[1.75] text-wine/80"
+                      >
+                        {telefonoSinCortes(parrafo)}
+                      </p>
+                    ))}
+                  </div>
+                )}
 
                 {seccion.items && (
-                  <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <ul className="grid gap-x-10 sm:grid-cols-2">
                     {seccion.items.map((item) => (
-                      <li key={item.titulo} className="card h-full p-6">
-                        <span
-                          aria-hidden="true"
-                          className="grid h-9 w-9 place-items-center rounded-full bg-blush text-magenta"
-                        >
-                          <Check size={16} strokeWidth={2.5} />
-                        </span>
-                        <h3 className="display-md mt-4 text-[1.0625rem]">{item.titulo}</h3>
-                        <p className="mt-2 text-[14.5px] leading-relaxed text-plum-soft">
-                          {item.texto}
+                      <li key={item.titulo} className="border-t border-wine/15 pb-8 pt-6">
+                        <h3 className="flex gap-3 text-[1.1875rem] font-semibold leading-snug tracking-[-0.01em]">
+                          <span
+                            aria-hidden="true"
+                            className="mt-[0.5em] h-2 w-2 shrink-0 rounded-full bg-magenta"
+                          />
+                          {item.titulo}
+                        </h3>
+                        <p className="mt-2 pl-5 text-[15.5px] leading-relaxed text-ink-soft">
+                          {telefonoSinCortes(item.texto)}
                         </p>
                       </li>
                     ))}
                   </ul>
                 )}
-              </Reveal>
-            ))}
-          </div>
-        </section>
+              </div>
+            </article>
+          ))}
+        </div>
 
         {/* Preguntas frecuentes */}
-        <section className="bg-cream py-20 lg:py-24" aria-labelledby="faq-local">
-          <div className="mx-auto max-w-3xl px-5 sm:px-8">
-            <Reveal>
-              <h2 id="faq-local" className="display text-[1.875rem] sm:text-[2.25rem]">
-                Preguntas frecuentes
-              </h2>
-            </Reveal>
-
-            <dl className="mt-10 space-y-4">
-              {pagina.faqs.map((faq, i) => (
-                <Reveal key={faq.pregunta} delay={i * 40}>
-                  <div className="card p-6">
-                    <dt className="display-md text-[1.0625rem] sm:text-[1.125rem]">
-                      {faq.pregunta}
-                    </dt>
-                    <dd className="mt-3 text-[15px] leading-[1.72] text-plum-soft">
-                      {faq.respuesta}
-                    </dd>
-                  </div>
-                </Reveal>
-              ))}
-            </dl>
-
-            <Reveal delay={80}>
-              <div className="mt-10 flex flex-col items-center gap-5 rounded-[var(--radius-xl)] bg-magenta px-8 py-9 text-center sm:flex-row sm:justify-between sm:text-left">
-                <p className="max-w-sm text-[15.5px] leading-relaxed text-on-dark-soft">
+        <section aria-labelledby="faq-local" className="bg-petal/45 py-24 lg:py-36">
+          <div className="mx-auto grid max-w-[1320px] gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:gap-6">
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-[104px]">
+                <h2 id="faq-local" className="rd-title text-[clamp(2.6rem,4.6vw,4.25rem)]">
+                  Preguntas frecuentes
+                </h2>
+                <p className="rd-lead mt-5 max-w-[24rem]">
                   ¿Tu duda no está aquí? Llama al consultorio y te orientamos antes de
                   reservar.
                 </p>
-                <a href="tel:+584120896444" className="btn btn-light tnum shrink-0">
-                  <Phone size={16} strokeWidth={2} aria-hidden="true" />
-                  0412 089 6444
+                <a href={TELEFONO.href} className="rd-btn rd-btn-ghost tnum mt-8">
+                  <Phone size={17} strokeWidth={2} aria-hidden="true" />
+                  {TELEFONO.visible}
                 </a>
               </div>
-            </Reveal>
+            </div>
+
+            <dl className="border-t border-wine/15 lg:col-span-7 lg:col-start-6">
+              {pagina.faqs.map((faq) => (
+                <div key={faq.pregunta} className="border-b border-wine/15 py-7">
+                  <dt className="text-[1.25rem] font-semibold leading-snug tracking-[-0.01em] sm:text-[1.375rem]">
+                    {faq.pregunta}
+                  </dt>
+                  <dd className="mt-3 max-w-[40rem] text-[1.0625rem] leading-relaxed text-wine/80">
+                    {telefonoSinCortes(faq.respuesta)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
         {/* Otras consultas */}
-        <section className="bg-blush py-20 lg:py-24" aria-labelledby="relacionadas">
-          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-            <Reveal>
-              <h2 id="relacionadas" className="display text-[1.75rem] sm:text-[2.125rem]">
-                Otras consultas del consultorio
-              </h2>
-            </Reveal>
+        <section aria-labelledby="relacionadas" className="bg-celeste py-24 lg:py-32">
+          <div className="mx-auto max-w-[1320px] px-5 sm:px-8">
+            <h2 id="relacionadas" className="rd-title text-[clamp(2.4rem,4.6vw,4.25rem)]">
+              Otras consultas del consultorio
+            </h2>
 
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-              {pagina.relacionadas.map((slug, i) => {
+            <ul className="mt-10 border-t border-wine/12">
+              {pagina.relacionadas.map((slug) => {
                 const otra = getPaginaLocal(slug);
                 return (
-                  <Reveal as="li" key={slug} delay={i * 60}>
+                  <li key={slug} className="border-b border-wine/12">
                     <Link
                       href={`/${otra.slug}`}
-                      className="card card-hover group flex h-full items-start justify-between gap-5 p-7"
+                      className="rd-row -mx-3 my-2 grid grid-cols-[1fr_auto] items-center gap-6 px-3 py-6 sm:-mx-5 sm:px-5"
                     >
                       <span>
-                        <span className="display-md block text-[1.1875rem] transition-colors group-hover:text-magenta">
+                        <span className="rd-title block text-[clamp(1.75rem,3vw,2.5rem)]">
                           {otra.titulo}
                         </span>
-                        <span className="mt-2 block text-[14.5px] leading-relaxed text-plum-soft">
-                          {otra.metaDescripcion}
+                        <span className="rd-row-sub tnum mt-2 block max-w-[46rem] text-[15.5px] leading-snug text-ink-soft">
+                          {telefonoSinCortes(otra.metaDescripcion)}
                         </span>
                       </span>
-                      <ArrowRight
-                        size={18}
-                        strokeWidth={2}
+                      <span
                         aria-hidden="true"
-                        className="mt-1 shrink-0 text-rose transition-transform duration-200 group-hover:translate-x-0.5"
-                      />
+                        className="rd-row-icon grid h-14 w-14 place-items-center rounded-full bg-milk text-magenta-deep"
+                      >
+                        <ArrowRight size={21} strokeWidth={1.8} />
+                      </span>
                     </Link>
-                  </Reveal>
+                  </li>
                 );
               })}
             </ul>
@@ -280,6 +298,6 @@ export default function PaginaLocalView({ pagina }: { pagina: PaginaLocal }) {
 
       <Footer />
       <WhatsAppButton />
-    </>
+    </div>
   );
 }

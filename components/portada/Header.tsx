@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { AGENDAR_URL, NAV, TELEFONO } from "./datos";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  /* Las páginas locales también usan este encabezado: fuera de la portada
+     las anclas llevan a /#seccion */
+  const enPortada = usePathname() === "/";
+  const ir = (ancla: string) => (enPortada ? ancla : `/${ancla}`);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -40,7 +46,7 @@ export default function Header() {
       >
         <div className="mx-auto flex h-[72px] max-w-[1320px] items-center justify-between gap-6 px-5 sm:px-8">
           <a
-            href="#inicio"
+            href={enPortada ? "#inicio" : "/"}
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 rounded-full"
             aria-label="Ir al inicio. Dra. Hilda Mary Díaz García"
@@ -58,7 +64,7 @@ export default function Header() {
             {NAV.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={ir(link.href)}
                 className="text-[15px] font-medium text-wine/80 transition-colors hover:text-magenta"
               >
                 {link.label}
@@ -113,7 +119,7 @@ export default function Header() {
                 style={{ "--i": i } as React.CSSProperties}
               >
                 <a
-                  href={link.href}
+                  href={ir(link.href)}
                   onClick={() => setOpen(false)}
                   className="rd-title block py-5 text-[2.5rem] transition-colors hover:text-petal"
                 >

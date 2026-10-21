@@ -1,5 +1,5 @@
 /* ============================================================================
-   Portada (/)
+   Portada (/) y páginas locales (components/PaginaLocalView)
    La pieza se apoya en el logo de la doctora: el óvulo magenta con su corona
    y el trazo celeste que llega hasta él. Ese es el único momento que se mueve
    solo; el resto del movimiento responde al scroll o a la mano de la paciente.
@@ -7,7 +7,7 @@
    Todo va en la capa `components` de Tailwind: así las utilidades
    (hidden, px-5, leading-…) siguen pudiendo ajustar estas clases. El prefijo
    `rd-` viene del rediseño de 2026 y aísla estas clases de las del resto del
-   sitio, que conserva el diseño anterior.
+   sitio (la tienda /ebook), que conserva el diseño anterior.
    ========================================================================== */
 
 @layer components {

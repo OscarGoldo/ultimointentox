@@ -11,8 +11,8 @@ const figtree = Figtree({
 });
 
 /* Cormorant Garamond: serif de contraste alto, cálida y femenina sin caer en
-   lo decorativo. Se usa solo en tamaños grandes, donde luce. Hoy la usan las
-   páginas locales y la tienda; la portada usa Instrument Serif. */
+   lo decorativo. Se usa solo en tamaños grandes, donde luce. Hoy solo la usa
+   la tienda; la portada y las páginas locales usan Instrument Serif. */
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-cormorant",
@@ -22,7 +22,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 /* Instrument Serif: serif de trazo fino, sobria y elegante en tamaños grandes.
-   Titulares de la portada; el texto corrido va en Figtree. */
+   Titulares de la portada y las páginas locales; el texto corrido va en Figtree. */
 const instrument = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-instrument",
