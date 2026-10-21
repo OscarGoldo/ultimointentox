@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 
+/* Secciones de la portada nueva (components/portada). Este encabezado ya solo
+   se usa fuera de ella, así que los enlaces navegan a /#seccion. */
 const navLinks = [
-  { href: "#sobre-mi", label: "Sobre mí" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#ebook", label: "Ebook" },
-  { href: "#contacto", label: "Contacto" },
-  { href: "#faq", label: "Preguntas" },
+  { href: "#especialidades", label: "Especialidades" },
+  { href: "#embarazo", label: "Embarazo" },
+  { href: "#trayectoria", label: "Trayectoria" },
+  { href: "#agenda", label: "Agenda" },
+  { href: "#preguntas", label: "Preguntas" },
 ];
 
 export default function Header() {

@@ -91,15 +91,3 @@ export const FOTOS = {
     focus: "50% 25%",
   },
 } as const satisfies Record<string, Foto>;
-
-/** Galería del archivo, en el orden en que se muestra. */
-export const GALERIA: Foto[] = [
-  FOTOS.conBebe,
-  FOTOS.reciénNacida,
-  FOTOS.quirofano,
-  FOTOS.conPaciente,
-  FOTOS.nacimiento,
-  FOTOS.consulta,
-  FOTOS.educacion,
-  FOTOS.corriendo,
-];

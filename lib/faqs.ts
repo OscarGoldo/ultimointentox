@@ -40,9 +40,4 @@ export const FAQS_PORTADA: Faq[] = [
     respuesta:
       "Los honorarios médicos se informan directamente al contactar el consultorio, ya que pueden variar según el tipo de consulta (primera vez, control prenatal, procedimiento, etc.). Contáctanos al 0412-0896444 o por correo para más información.",
   },
-  {
-    pregunta: "¿Atienden seguros médicos o HCM?",
-    respuesta:
-      "Aceptamos diversas aseguradoras y HCM. Te recomendamos confirmar la cobertura directamente con tu aseguradora y mencionarlo al momento de agendar tu cita para orientarte correctamente.",
-  },
 ];

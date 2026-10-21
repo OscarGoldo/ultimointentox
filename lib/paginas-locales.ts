@@ -97,10 +97,7 @@ export const PAGINAS_LOCALES: PaginaLocal[] = [
       },
       {
         titulo: "Dónde queda el consultorio y cómo agendar",
-        parrafos: [
-          AGENDAR,
-          "Se aceptan diversas aseguradoras y HCM. Confirma la cobertura con tu aseguradora y menciónalo al agendar, para orientarte mejor.",
-        ],
+        parrafos: [AGENDAR],
       },
       {
         titulo: "Si es tu primera vez, trae esto",
@@ -124,11 +121,6 @@ export const PAGINAS_LOCALES: PaginaLocal[] = [
         pregunta: "¿Atiende a adolescentes?",
         respuesta:
           "Sí. La primera visita ginecológica se recomienda entre los 13 y 15 años o al inicio de la actividad sexual, y suele ser una consulta de orientación sobre ciclo menstrual, anticoncepción y vacuna contra el VPH, sin necesidad de examen pélvico completo.",
-      },
-      {
-        pregunta: "¿Se aceptan seguros médicos o HCM?",
-        respuesta:
-          "Sí, se trabaja con diversas aseguradoras y HCM. Te recomendamos confirmar la cobertura directamente con tu aseguradora y mencionarlo al momento de agendar.",
       },
     ],
     relacionadas: ["control-prenatal-en-maturin", "fertilidad-en-maturin"],

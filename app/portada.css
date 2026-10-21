@@ -1,0 +1,519 @@
+/* ============================================================================
+   Portada (/)
+   La pieza se apoya en el logo de la doctora: el óvulo magenta con su corona
+   y el trazo celeste que llega hasta él. Ese es el único momento que se mueve
+   solo; el resto del movimiento responde al scroll o a la mano de la paciente.
+
+   Todo va en la capa `components` de Tailwind: así las utilidades
+   (hidden, px-5, leading-…) siguen pudiendo ajustar estas clases. El prefijo
+   `rd-` viene del rediseño de 2026 y aísla estas clases de las del resto del
+   sitio, que conserva el diseño anterior.
+   ========================================================================== */
+
+@layer components {
+
+.rd {
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--color-milk);
+  color: var(--color-wine);
+  overflow-x: clip;
+}
+
+.rd ::selection {
+  background-color: var(--color-petal);
+  color: var(--color-wine);
+}
+
+.rd section[id] {
+  scroll-margin-top: 72px;
+}
+
+/* --- Tipografía ------------------------------------------------------------ */
+
+/* Titular de portada: serif fina, grande y con interlineado corto */
+.rd-display {
+  font-family: var(--font-instrument), "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+/* Titulares de sección: la misma serif, un poco menos apretada */
+.rd-title {
+  font-family: var(--font-instrument), "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.rd-lead {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+  text-wrap: pretty;
+}
+
+/* Margen lateral alineado con el contenedor de 1320px; también como
+   scroll-padding para que el scroll-snap respete el margen */
+.rd-gutter-x {
+  padding-inline: 1.25rem;
+  scroll-padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .rd-gutter-x {
+    padding-inline: max(2rem, calc((100vw - 1320px) / 2 + 2rem));
+    scroll-padding-inline: max(2rem, calc((100vw - 1320px) / 2 + 2rem));
+  }
+}
+
+/* --- Botones --------------------------------------------------------------- */
+
+.rd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 54px;
+  padding: 0 1.6rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 250ms ease, color 250ms ease,
+    border-color 250ms ease, transform 200ms ease;
+}
+.rd-btn:active {
+  transform: scale(0.98);
+}
+.rd-btn-primary {
+  background-color: var(--color-magenta);
+  color: #fff;
+}
+.rd-btn-primary:hover {
+  background-color: var(--color-magenta-deep);
+}
+.rd-btn-ghost {
+  border-color: rgba(42, 10, 25, 0.2);
+  color: var(--color-wine);
+}
+.rd-btn-ghost:hover {
+  background-color: var(--color-wine);
+  border-color: var(--color-wine);
+  color: var(--color-milk);
+}
+.rd-btn-ghost-light {
+  border-color: rgba(252, 248, 249, 0.3);
+  color: var(--color-milk);
+}
+.rd-btn-ghost-light:hover {
+  background-color: var(--color-milk);
+  color: var(--color-wine);
+}
+
+.rd :focus-visible {
+  outline: 2px solid var(--color-magenta);
+  outline-offset: 3px;
+}
+
+/* --- Portada: entrada orquestada ------------------------------------------ */
+
+.rd-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.rd-line > span {
+  display: block;
+  animation: rd-rise 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(120ms + var(--i, 0) * 110ms);
+}
+@keyframes rd-rise {
+  from {
+    transform: translateY(108%);
+  }
+}
+
+.rd-fade {
+  animation: rd-fade 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--delay, 650ms);
+}
+@keyframes rd-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* --- El óvulo -------------------------------------------------------------- */
+
+.rd-ovum {
+  --mx: 0;
+  --my: 0;
+}
+
+/* Los grupos SVG giran alrededor del centro del óvulo (300, 300 en el viewBox) */
+.rd-bloom,
+.rd-core,
+.rd-spin,
+.rd-pulse {
+  transform-origin: 300px 300px;
+}
+
+.rd-bloom {
+  animation: rd-bloom 1400ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.rd-core {
+  animation: rd-bloom 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes rd-bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.rd-petal {
+  opacity: 0;
+  animation: rd-petal 800ms ease-out both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes rd-petal {
+  to {
+    opacity: var(--o, 1);
+  }
+}
+
+.rd-spin {
+  animation: rd-spin 200s linear infinite;
+}
+.rd-spin--rev {
+  animation-duration: 280s;
+  animation-direction: reverse;
+}
+@keyframes rd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* La onda que sale del óvulo en el instante en que llega el trazo */
+.rd-pulse {
+  opacity: 0;
+}
+.rd-ovum[data-fused] .rd-pulse {
+  animation: rd-pulse 1600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes rd-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+/* El óvulo se abre como un iris y aparece ella. Si el JS no llega a correr,
+   la animación de respaldo lo abre igual a los 3 s. */
+.rd-portrait {
+  clip-path: circle(0% at 50% 50%);
+  animation: rd-iris 1100ms cubic-bezier(0.65, 0, 0.35, 1) 3s both;
+}
+.rd-ovum[data-fused] .rd-portrait {
+  animation: rd-iris-now 1100ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes rd-iris {
+  to {
+    clip-path: circle(51% at 50% 50%);
+  }
+}
+@keyframes rd-iris-now {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(51% at 50% 50%);
+  }
+}
+
+/* --- Manifiesto: las palabras se entintan al leer -------------------------- */
+
+.rd-ink .rd-word {
+  opacity: clamp(0.16, calc(var(--p, 0) * (var(--n) + 8) - var(--i)), 1);
+  transition: opacity 160ms linear;
+}
+
+/* --- Especialidades: paneles que se abren ---------------------------------- */
+
+.rd-panel-body {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+.rd-panel-body > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (min-width: 1024px) {
+  .rd-panel {
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow 850ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .rd-panel[data-open] {
+    flex-grow: 2.3;
+  }
+  .rd-panel-body {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 300ms ease;
+  }
+  .rd-panel[data-open] .rd-panel-body {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition-delay: 150ms, 350ms;
+  }
+  .rd-panel img {
+    transition: transform 1200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .rd-panel[data-open] img {
+    transform: scale(1.03);
+  }
+}
+
+/* --- Semana a semana ------------------------------------------------------- */
+
+.rd-tick {
+  display: inline-block;
+  animation: rd-tick 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes rd-tick {
+  from {
+    opacity: 0.25;
+    transform: translateY(16%);
+  }
+}
+
+.rd-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  cursor: grab;
+}
+.rd-range:active {
+  cursor: grabbing;
+}
+.rd-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-magenta) var(--fill),
+    rgba(42, 10, 25, 0.16) var(--fill)
+  );
+}
+.rd-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -12px;
+  border-radius: 50%;
+  background: var(--color-magenta);
+  border: 5px solid var(--color-milk);
+  box-shadow: 0 6px 18px -6px rgba(122, 16, 56, 0.7);
+  transition: transform 200ms ease;
+}
+.rd-range:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.rd-range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(42, 10, 25, 0.16);
+}
+.rd-range::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-magenta);
+}
+.rd-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-magenta);
+  border: 5px solid var(--color-milk);
+}
+.rd-range:focus-visible {
+  outline: none;
+}
+.rd-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-wine);
+  outline-offset: 3px;
+}
+
+/* --- Trayectoria ----------------------------------------------------------- */
+
+.rd-journey-photo {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 700ms ease, transform 1400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.rd-journey-photo[data-active] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 1024px) {
+  .rd-step {
+    transition: opacity 500ms ease;
+  }
+  .rd-step:not([data-active]) {
+    opacity: 0.3;
+  }
+}
+
+/* --- Momentos: galería horizontal ----------------------------------------- */
+
+/* Alto de cada foto; en móvil nunca más ancha que el 80% de la pantalla */
+.rd-moment-photo {
+  height: min(400px, calc(80vw * var(--ar)));
+}
+@media (min-width: 640px) {
+  .rd-moment-photo {
+    height: 460px;
+  }
+}
+@media (min-width: 1024px) {
+  .rd-moment-photo {
+    height: min(54svh, 540px);
+  }
+}
+
+.rd-moments:not([data-pinned]) .rd-moments-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.rd-moments:not([data-pinned]) .rd-moments-track::-webkit-scrollbar {
+  display: none;
+}
+.rd-moments[data-pinned] .rd-moments-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.rd-moments[data-pinned] .rd-moments-track {
+  will-change: transform;
+}
+
+/* --- Agenda: filas que se llenan de magenta ------------------------------- */
+
+.rd-row {
+  position: relative;
+  isolation: isolate;
+  transition: color 350ms ease;
+}
+.rd-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 24px;
+  background-color: var(--color-magenta);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 550ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.rd-row:hover,
+.rd-row:focus-visible {
+  color: #fff;
+}
+.rd-row:hover::before,
+.rd-row:focus-visible::before {
+  transform: scaleY(1);
+}
+.rd-row .rd-row-sub {
+  transition: color 350ms ease;
+}
+.rd-row:hover .rd-row-sub,
+.rd-row:focus-visible .rd-row-sub {
+  color: #f6d9e4;
+}
+.rd-row .rd-row-icon {
+  transition: background-color 350ms ease, color 350ms ease, transform 350ms ease;
+}
+.rd-row:hover .rd-row-icon,
+.rd-row:focus-visible .rd-row-icon {
+  background-color: #fff;
+  color: var(--color-magenta);
+  transform: rotate(-8deg);
+}
+
+/* --- Menú móvil ------------------------------------------------------------ */
+
+.rd-menu-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 400ms ease, transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.rd-menu[data-open] .rd-menu-item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(80ms + var(--i, 0) * 55ms);
+}
+
+/* --- Mapa afinado a la paleta --------------------------------------------- */
+
+.rd-map {
+  filter: saturate(0.4) hue-rotate(-12deg) brightness(1.02);
+  transition: filter 500ms ease;
+}
+.rd-map:hover {
+  filter: none;
+}
+
+/* --- Movimiento reducido ---------------------------------------------------
+   Con "reducir movimiento" activo en el sistema se quita todo desplazamiento,
+   giro y paralaje, pero se conservan los fundidos de opacidad: la portada
+   sigue apareciendo con calma, sin nada que se mueva por la pantalla.
+   ?movimiento=completo en la URL fuerza la versión completa para revisarla. */
+
+@media (prefers-reduced-motion: reduce) {
+  .rd:not([data-motion="full"]) *,
+  .rd:not([data-motion="full"]) *::before,
+  .rd:not([data-motion="full"]) *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .rd:not([data-motion="full"]) .rd-line > span,
+  .rd:not([data-motion="full"]) .rd-fade {
+    animation: rd-soft 900ms ease 150ms both !important;
+  }
+  .rd:not([data-motion="full"]) .rd-portrait {
+    clip-path: none;
+    animation: rd-soft 1200ms ease 250ms both !important;
+  }
+}
+
+@keyframes rd-soft {
+  from {
+    opacity: 0;
+  }
+}
+
+}

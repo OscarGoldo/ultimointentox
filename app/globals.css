@@ -40,6 +40,14 @@
   --color-line-strong: #e8d2d8;
   --color-line-dark: #96284f;    /* hairline dentro de la banda magenta        */
 
+  /* --- Portada (app/portada.css) ------------------------------------------- */
+  --color-milk: #fcf8f9;         /* fondo: blanco leche con un punto rosado    */
+  --color-wine: #2a0a19;         /* texto y bandas oscuras, vino profundo      */
+  --color-ink-soft: #6e4b5b;     /* texto secundario sobre leche       7.1:1   */
+  --color-on-wine-soft: #e6c3d1; /* texto secundario sobre vino       11.6:1   */
+  --color-celeste: #cdebf8;      /* banda del embarazo, el celeste del logo    */
+  --color-petal: #f5d5e1;        /* DECORATIVO: pétalos y rellenos             */
+
   /* --- Tipografía ---------------------------------------------------------- */
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: var(--font-cormorant), "Iowan Old Style", Georgia, serif;
@@ -269,9 +277,10 @@
     transform: none !important;
     transition: none !important;
   }
-  *,
-  *::before,
-  *::after {
+  /* La portada (.rd) maneja su propio movimiento reducido en portada.css */
+  *:not(.rd *),
+  *:not(.rd *)::before,
+  *:not(.rd *)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Cormorant_Garamond } from "next/font/google";
+import { Figtree, Cormorant_Garamond, Instrument_Serif } from "next/font/google";
 import { Toaster } from "sonner";
 import GoogleTag from "@/components/GoogleTag";
 import "./globals.css";
@@ -11,12 +11,23 @@ const figtree = Figtree({
 });
 
 /* Cormorant Garamond: serif de contraste alto, cálida y femenina sin caer en
-   lo decorativo. Se usa solo en tamaños grandes, donde luce. */
+   lo decorativo. Se usa solo en tamaños grandes, donde luce. Hoy la usan las
+   páginas locales y la tienda; la portada usa Instrument Serif. */
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-cormorant",
   display: "swap",
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+/* Instrument Serif: serif de trazo fino, sobria y elegante en tamaños grandes.
+   Titulares de la portada; el texto corrido va en Figtree. */
+const instrument = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-instrument",
+  display: "swap",
+  weight: "400",
   style: ["normal", "italic"],
 });
 
@@ -68,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${figtree.variable} ${cormorant.variable}`}>
+    <html lang="es" className={`${figtree.variable} ${cormorant.variable} ${instrument.variable}`}>
       <body className="antialiased">
         {children}
         <GoogleTag />
